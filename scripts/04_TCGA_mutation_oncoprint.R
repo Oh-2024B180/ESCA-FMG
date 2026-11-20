@@ -1,24 +1,10 @@
 ###############################################################################
 ## Stage 4: TCGA-ESCA Mutation OncoPrint (18 Primary FMG)
 ##
-## Reference:
-## Liu et al. 2024 (Heliyon) Figure 2A convention -- per-sample alteration
-## landscape of FMG with histology / clinical annotation.
-##
 ## Inputs:
 ## data/ESCA_mc3.csv (TCGA MC3 mutation calls)
 ## data/TCGA.ESCA.sampleMap_ESCA_clinicalMatrix.csv (TCGA clinical matrix)
 ## tables/Tab1_2_FMG_list_primary.csv (18 Primary FMG)
-##
-## Sample filter:
-## clinical sample_type == "Primary Tumor"
-## intersect with samples that appear in MC3
-##
-## Functional consequence filter:
-## Missense_Mutation, Nonsense_Mutation, Frame_Shift_Del, Frame_Shift_Ins,
-## Splice_Site, In_Frame_Del, In_Frame_Ins, Translation_Start_Site,
-## Nonstop_Mutation
-## (Silent, 3'UTR, 5'UTR, Intron, Flank, RNA -> excluded)
 ##
 ## Outputs (tables/):
 ## Tab4_TCGA_mutation_frequency.csv
@@ -28,22 +14,6 @@
 ##
 ## Outputs (figures/, PDF + PNG @ 600 dpi -- CLAUDE.md fig ):
 ## Fig2A_TCGA_oncoprint.{pdf,png}
-##
-## Random seed: 1262118388 (Liu et al. 2024)
-##
-## Notes:
-## - Histology mapping:
-## "Esophagus Squamous Cell Carcinoma" -> "ESCC"
-## "Esophagus Adenocarcinoma, NOS" -> "EAC"
-## else -> "Other"
-## - oncoPrint is saved with cairo_pdf() / ragg::agg_png() (not ggsave).
-## - Layout (option A; ComplexHeatmap needs percentages and row names on different sides):
-## top : anno_oncoprint_barplot (per-sample mutation count)
-## bottom : Histology annotation (ESCC vs EAC)
-## right : percent + anno_oncoprint_barplot (per-gene n samples)
-## left : gene name
-## Note: ComplexHeatmap 2.22.0 does not allow pct_side == row_names_side
-## (Error: Percent values and row names should be at different side)
 ###############################################################################
 
 # 0. Working directory + output directory
@@ -196,8 +166,6 @@ cat("\n")
 cat(">>> STEP 6: Build oncoPrint\n")
 
 # color (ColorBrewer Set1, color-blind-safe)
-# : previous closuregeneratealter_funR lazy-eval
-# cellOther_functional, brown)apply .
 # colours are hard-coded in each function body (avoids closure capture)
 col_named_vec <- c(
   Missense = "#377EB8", # blue - type, Nonsense = "#E41A1C", # red - truncating, “
@@ -235,7 +203,7 @@ alter_fun_list <- list(
 hist_vec <- cli_keep[match(samples_keep, sampleID), histology]
 hist_colors <- c("ESCC" = "#1B9E77", "EAC" = "#D95F02", "Other" = "#7570B3")
 
-# Layout (as in the earlier Figure 2A):
+# Layout:
 # top : per-sample mutation count barplot
 # bottom : Histology
 # right : per-gene n samples barplot

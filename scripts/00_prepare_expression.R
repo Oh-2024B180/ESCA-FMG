@@ -1,12 +1,6 @@
 ###############################################################################
 ##  00_prepare_expression.R  —  expression matrices read by stages 04c and 06-14
 ##
-##  Extracts the samples the analysis needs from the UCSC Xena "TCGA TARGET GTEx" expression matrix (Toil
-##  re-processing) and writes them as separate files. This is the preparation script of the original analysis
-##  (April 2026); for this release its comments and messages were translated, the working-directory line was removed
-##  and the files are read from and written to data/. Its three outputs used later are byte-identical to the
-##  analysis files.
-##
 ##  Inputs (data/; see README.md for the Xena datasets):
 ##    1) TcgaTargetGtex_RSEM_Hugo_norm_count            (tab-separated, about 8 GB decompressed)
 ##    2) TcgaTargetGTEX_phenotype.csv                   (phenotype table of the same Xena hub, saved as CSV)
@@ -19,8 +13,6 @@
 ##    [3] expr_GTEx_esophagus.csv          GTEx esophagus samples (detailed_category contains "Esophagus"): 655
 ##    [4] GTEx_esophagus_subtype_map.csv   sample, subtype (Mucosa 273 / Muscularis 245 / Gastroesophageal
 ##                                         Junction 137), sex
-##
-##  Values are log2(norm_count + 1) as distributed by Xena; no further transformation.
 ###############################################################################
 
 # ── 0. Packages ──────────────────────────────────────────────────────────────

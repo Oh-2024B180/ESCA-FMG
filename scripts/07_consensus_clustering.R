@@ -1,25 +1,6 @@
 ###############################################################################
 ## Stage 7: Molecular Subtyping (ConsensusClusterPlus, 18 FMG)
 ##
-## Reference:
-## 7A: Input feature -- 18 FMG TCGA-ESCA expression, z-score (gene-wise)
-## 7B: CCP parameters -- maxK=9, reps=1000, pItem=0.8, pFeature=1.0,
-## clusterAlg="pam", distance="spearman",
-## innerLinkage="ward.D2", finalLinkage="ward.D2",
-## seed=1262118388
-## 7C: Optimal k -- multi-criteria decision (computed/logged in STEP 6):
-##   S1 cluster balance  -- min cluster >= 10% of N        [Senbabaoglu 2014, ref 43]
-##   S2 PAC local minimum -- smallest k that is a local min [Senbabaoglu 2014, ref 43]
-##   corroborated by monotone-decreasing relative CDF delta-area (Monti 2003)
-## Expected/observed: k=2 (global-lowest-PAC k=9 rejected: min cluster < 10%)
-## 7D: Subtype validation -- PCA + KM (log-rank p<0.05) + 18 FMG heatmap
-##
-## Reference PMIDs:
-## 20427518 : Wilkerson & Hayes 2010, Bioinformatics (ConsensusClusterPlus)
-## 25158761 : Senbabaoglu 2014, Sci Rep (PAC critique)
-## 27207943 : Gu 2016, Bioinformatics (ComplexHeatmap)
-## 28398314 : Vivian 2017, Nat Biotechnol (UCSC Toil expr)
-##
 ## Inputs:
 ## data/expr_ESCA_tumor.csv (UCSC Xena log2(RSEM+1), 58,581 x 181)
 ## tables/Tab1_2_FMG_list_primary.csv (18 Primary FMG)
@@ -37,13 +18,6 @@
 ## figures/Fig3F_FMG_heatmap_clusters.{pdf,png}
 ## figures/CCP_native/ (CCP native output dir)
 ##
-## logs/07_consensus_clustering_YYYYMMDD.log
-## logs/sessionInfo_stage7.txt
-##
-## Notes:
-## - z-score: gene-wise (each FMG row scaled to mean 0, sd 1); redundant with the Spearman distance,
-## but applied as specified in 7A.
-## - ConsensusClusterPlus saves its own PDFs to plot_dir; Fig3A/3B/3C are drawn separately here.
 ## - Color palette: ColorBrewer Dark2 (color-blind-safe, CLAUDE.md §7-4)
 ###############################################################################
 
@@ -209,7 +183,7 @@ cdf_df <- do.call(rbind, cdf_list)
 pac_vec <- vapply(ks, function(k) compute_pac(ccp_res[[k]]$consensusMatrix), numeric(1))
 names(pac_vec) <- ks
 
-# Delta area (Monti et al. 2003) -- area under CDF
+# Delta area -- area under CDF
 auc_vec <- vapply(ks, function(k) {
   d <- compute_cdf(ccp_res[[k]]$consensusMatrix)
   # trapezoidal AUC

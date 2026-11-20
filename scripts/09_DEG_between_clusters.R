@@ -1,26 +1,6 @@
 ###############################################################################
 ## Stage 9: DEG Between Clusters (TWO-TRACK + biotype filter)
 ##
-## - 9A: limma >=3.34.7 (TCGA log2-transformed direct) [PMID 25605792]
-## - 9B: |log2FC| >= 1 AND adj.P (BH) < 0.05
-## - 9C: drop genes where 0-expression sample fraction > 70% [PMID 27441086]
-## drop genes whose Ensembl gene_biotype != "protein_coding"
-## (for cross-platform validation and consistency with the mRNA-only signature of Liu 2024)
-## - 9D: clusterProfiler GO BP/MF/CC + KEGG (same parameters as stage 3)
-## [PMID 34557778]
-##
-## TWO-TRACK design:
-## Primary track : design = ~ 0 + cluster
-## Sensitivity track : design = ~ 0 + cluster + histology
-## Overlap summary : Tab9_DEG_overlap_summary.csv
-##
-## Contrast (both tracks):
-## log2FC = C1 - C2 (same convention as stage 8 / Tab7C)
-##
-## Heatmap (Fig5B):
-## Top 25 up (largest +log2FC) + Top 25 down (largest |-log2FC|) within
-## primary-significant subset.
-##
 ## Inputs:
 ## data/expr_ESCA_tumor.csv
 ## tables/Tab7_cluster_assignment.csv
@@ -39,8 +19,6 @@
 ## Fig5B_DEG_heatmap_top25up_top25down.{pdf,png}
 ## Fig5C_DEG_GO_{BP,MF,CC}_dotplot.{pdf,png}
 ## Fig5D_DEG_KEGG_dotplot.{pdf,png}
-##
-## Random seed: 1262118388
 ###############################################################################
 
 # run from the repository root (see README.md)

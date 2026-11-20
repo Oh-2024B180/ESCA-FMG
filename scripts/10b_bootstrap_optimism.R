@@ -1,30 +1,11 @@
 ###############################################################################
 ## Stage 10b: Bootstrap optimism and selection stability of the seven-gene risk score
 ##
-## Manuscript: Methods "Prognostic risk model construction" (last two sentences),
-##             Results "Construction of the prognostic risk model" (last paragraph), Table 4 footnote a.
-##
-## Procedure (Harrell 1996; Meinshausen & Buhlmann 2010):
-##   B = 1,000 resamples drawn with replacement from the 181 TCGA-ESCA patients. In each resample the
-##   whole selection pipeline of Stage 10 is repeated: univariate Cox screen (Wald p < 0.01) over the
-##   2,304 protein-coding DEG, then LASSO-Cox (glmnet, alpha = 1, 10-fold CV, lambda.min).
-##   optimism = mean( C of the resample model in its own resample - C of the same model in the original cohort )
-##   optimism-corrected C = apparent C of the final model - optimism
-##   C is always taken for the fixed score with "higher score = shorter survival"
-##   (concordance(..., reverse = TRUE)); a model is never refitted in the data it is evaluated on.
-##
 ## Inputs  : tables/Tab10_risk_scores_per_sample.csv, tables/Tab10_univariate_Cox_results.csv (gene list),
 ##           data/expr_ESCA_tumor.csv
-## Outputs : cache/boot_optimism_B1000.rds            (one list element per resample)
-##           tables/Tab10b_bootstrap_optimism.csv     (summary used in the manuscript)
 ##
-## History : the script of the first run (optimism 0.147, corrected C 0.561, re-selection 18-45%, median
-##           23 genes, IQR 19-27) was not kept. This file was written on 2026-10-06 from the Methods text and
-##           gives 0.149 / 0.560 / 18-45% / 23 (19-27); the small difference is the random-number stream
-##           (Monte Carlo SE of the optimism 0.001). Since the revision the manuscript reports these values.
-## Runtime : about 36 min with 12 workers (cv.glmnet takes ~30 s per resample).
-##           Results depend on the seed AND on the number of workers (one random stream per worker).
-## RERUN   : FALSE reads the cached resamples and only rebuilds the summary table.
+## Outputs : cache/boot_optimism_B1000.rds            (one list element per resample)
+##           tables/Tab10b_bootstrap_optimism.csv
 ###############################################################################
 suppressPackageStartupMessages({library(survival); library(glmnet); library(data.table); library(parallel)})
 ROOT <- ""   # repository root = working directory (see README.md)

@@ -1,24 +1,10 @@
 ###############################################################################
 ## Stage 5: TCGA-ESCA CNV Gain/Loss Frequency (18 Primary FMG)
 ##
-## - 4A: GISTIC2.0 thresholded (UCSC Xena TCGA_ESCA_gistic2_thresholded)
-## [PMID: 21527027 -- Mermel 2011 Genome Biol]
-## - 4B: threshold interpretation
-## +2 high-level amplification
-## +1 gain
-## 0 diploid
-## -1 heterozygous loss
-## -2 deep deletion
-## - 4C: Stacked barplot (gain frequency vs loss frequency per gene)
-## [Liu et al. 2024 Figure 2B convention]
-##
 ## Inputs:
 ## data/Gistic2_CopyNumber_Gistic2_all_thresholded.by_genes (24776 x 184)
 ## data/TCGA.ESCA.sampleMap_ESCA_clinicalMatrix.csv
 ## tables/Tab1_2_FMG_list_primary.csv (18 Primary FMG)
-##
-## Sample filter:
-## sample_type == "Primary Tumor" (clinical) intersect GISTIC sample columns
 ##
 ## Outputs (tables/):
 ## Tab5_TCGA_CNV_frequency.csv
@@ -31,31 +17,6 @@
 ##
 ## Outputs (figures/, PDF + PNG @ 600 dpi):
 ## Fig2B_TCGA_CNV_gain_loss.{pdf,png}
-## (Hybrid style horizontal stacked bars, 4-color, signed % x-axis)
-##
-## Reference PMID:
-## - 21527027 : Mermel CH et al. 2011 Genome Biol -- GISTIC2.0
-##
-## Random seed: 1262118388 (Liu et al. 2024)
-##
-## Notes:
-## - Hybrid stacked barplot style:
-## * Horizontal bars (coord_flip)
-## * 4-color (high_amp/gain/het_loss/deep_del)
-## * gain side : gain (near 0) -> high_amp (at bar tip)
-## * loss side : loss (near 0) -> deep_del (at bar tip, mirrored)
-## * Signed % x-axis labels (-70%, ..., 0%, ..., 70%)
-## * Vertical line at x=0
-## - Color palette: ColorBrewer RdBu 4-class, color-blind-safe
-## high_amp : "#CA0020" dark red
-## gain : "#F4A582" light red
-## loss : "#92C5DE" light blue
-## deep_del : "#0571B0" dark blue
-## - Gene order:
-## * Figure y-axis (top->bottom) : Stage 4 Tab4 mutation prevalence, descending
-## (TP53 at top, FGFR2 at bottom)
-## (Liu 2024 Figure 2A/2B convention)
-## * Table sort : total_altered_pct, descending
 ###############################################################################
 
 # 0. Working directory + output

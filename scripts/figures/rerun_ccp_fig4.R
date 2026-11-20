@@ -1,8 +1,6 @@
 ###############################################################################
-## Figure 4 (a)-(c): the CCP numbers were never saved (only the panel images), so the consensus
-## clustering of scripts/07_consensus_clustering.R (STEP 2-6) is run again with the same inputs, parameters and
-## seed, and its result is kept ONLY if the k = 2 assignment equals tables/Tab7_cluster_assignment.csv exactly.
-##   Rscript rerun_ccp_fig4.R      (R 4.4.1, ConsensusClusterPlus 1.68.0; the analysis used 1.70.0)
+## Figure 4 (a)-(c): the consensus clustering of stage 07 run again with the same inputs, parameters and seed
+##
 ## Output: figures/ccp_rerun.rds (CDF per k, PAC, delta area, k = 2 consensus matrix and classes) + ccp_rerun.log
 ###############################################################################
 suppressPackageStartupMessages({ library(data.table); library(ConsensusClusterPlus) })

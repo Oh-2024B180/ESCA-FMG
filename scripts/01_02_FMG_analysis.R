@@ -1,19 +1,6 @@
 ###############################################################################
 ## Stage 1 + Stage 2: Somatic Variant QC & FMG Identification
 ##
-## - Stage 1A: AF >= 0.05 (upstream applied)
-## - Stage 1C: Mutect2 (Cibulskis 2013, PMID: 23396013)
-## - Stage 1D: gnomAD AF cutoffs (Karczewski 2020, PMID: 32461654)
-## - common germline: gnomAD AF >= 0.01 -> exclude
-## - possible germline: gnomAD AF >= 0.001 -> exclude
-## - Stage 1E: Position-level recurrence >= 5 samples -> review/flag
-## - Stage 1F: Functional impact filter (missense/nonsense/frameshift/splice/inframe-indel)
-## - Stage 2A: FMG prevalence cutoff = 5%
-## - Stage 2B: Multi-gene annotation flagged
-## - Stage 2C: Passenger gene exclusion -> option A (no filter)
-## Reference: Lawrence et al. 2013 (PMID: 23770567)
-## - Stage 2D: MyVariant.info primary annotation + TxDb fallback
-##
 ## Inputs:
 ## data/variants_eso_final_masked.csv (CODA tumor-only Mutect2, AF>=0.05 applied)
 ## data/recurrent_site_rescue_list.csv (optional, auto-template if absent)
@@ -34,12 +21,6 @@
 ##
 ## Cache:
 ## cache/cache_myvariant_stage01_02.rds
-##
-## Random seed: 1262118388 (as in Liu et al. 2024)
-##
-## Notes:
-## - VCF left-normalization / decomposition must be done upstream
-## - The first run calls the MyVariant API (5-30 min); re-runs use the cache
 ###############################################################################
 
 # 0. Working directory + output directory

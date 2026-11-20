@@ -1,16 +1,6 @@
 ###############################################################################
 ## Stage 13: Nomogram (TCGA-ESCA, RS + clinical variables)
 ##
-## 13A: Variable selection
-## - Candidates: RiskScore + age + gender + pathologic_stage + grade
-## + residual_tumor + histology
-## - Multivariate Cox with all seven candidates (complete cases)
-## - Final nomogram variables: **RS + histology + stage + residual**
-## 13B: rms::cph + nomogram + calibrate (Harrell 2015 textbook)
-## 13C: Calibration bootstrap B=1000 at 1, 2 and 3 years (5 years only if at least AT_RISK_MIN patients remain at risk)
-## (5-yr at-risk = 4 < 10, so 1/2/3-yr only)
-## 13D: C-index comparison: nomogram / RS alone / clinical only
-##
 ## Inputs:
 ## data/TCGA.ESCA.sampleMap_ESCA_clinicalMatrix.csv
 ## tables/Tab10_risk_scores_per_sample.csv
@@ -40,9 +30,6 @@ for (d in c(TBLDIR, FIGDIR, LOGDIR)) {
 }
 
 CALIB_B <- 1000
-# 1-/2-/3-yr (5-yr fallback per low at-risk; 2-yr added 2026-05-07 for
-# consistency with Results body "1-, 2- and 3-year OS probability" framing and Fig9D
-# timeROC. Verified at-risk @ 2-yr = 36 (>= AT_RISK_MIN); 3-yr = 14; 5-yr = 4.)
 CALIB_TIMES_DAYS <- c(365, 730, 1095)
 AT_RISK_MIN <- 10
 
@@ -174,7 +161,7 @@ ph_full[, grade_collapsed := factor(grade_collapsed, levels = c("G1","G2","G3"))
 ph_full[, histology_collapsed := factor(histology_collapsed, levels = c("ESCC","EAC"))]
 cat(sprintf(" complete-case n: %d\n", nrow(ph_full)))
 cat(sprintf(" complete-case deaths: %d\n", sum(ph_full$OS)))
-print(ph_full[, .(n = .N, deaths = sum(OS)), by = sex])          # patients and deaths by sex (Results 3.8)
+print(ph_full[, .(n = .N, deaths = sum(OS)), by = sex])          # patients and deaths by sex
 
 mv_full <- coxph(Surv(OS.time, OS) ~ RiskScore + age + sex + stage_collapsed +
                   residual_collapsed + grade_collapsed + histology_collapsed,
@@ -358,7 +345,6 @@ ggsave(file.path(FIGDIR, "Fig9C_C_index_comparison.png"),
 cat(" [OK] Fig9C_C_index_comparison.{pdf,png}\n")
 
 # 10. Time-dependent ROC AUC for nomogram (1/2/3-year)
-# Reference: Blanche P 2013 Stat Med — timeROC (PMID 24027076)
 cat("\n[10/12] Time-dependent ROC AUC (nomogram linear predictor)\n")
 suppressPackageStartupMessages(library(timeROC))
 nom_lp <- predict(nom_fit, type = "lp")

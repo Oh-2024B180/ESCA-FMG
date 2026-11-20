@@ -1,10 +1,6 @@
 ###############################################################################
 ##  Stage 9B — Direction-resolved enrichment (16 enrichments)
 ##
-##  Splits primary + sensitivity sig DEGs by logFC sign and runs enrichGO
-##  BP/MF/CC + enrichKEGG separately for each of 4 subsets:
-##    primary_C1up, primary_C2up, sensitivity_C1up, sensitivity_C2up
-##
 ##  Inputs:
 ##    tables/Tab9_DEG_significant_C1_vs_C2.csv      (Primary sig)
 ##    tables/Tab9_DEG_sensitivity_significant.csv   (Sensitivity sig)
@@ -12,9 +8,8 @@
 ##  Outputs:
 ##    Tab9_DEG_<ontology>_<track>_<dir>.csv  (16 tables)
 ##    Fig5E_DEG_<ontology>_<track>_<dir>_dotplot.{pdf,png}  (16 figures × 2)
-##  Log: 09B_split_enrichment_diagnostics.txt
 ##
-##  Random seed: 1262118388
+##  Log: 09B_split_enrichment_diagnostics.txt
 ###############################################################################
 
 # run from the repository root (see README.md)

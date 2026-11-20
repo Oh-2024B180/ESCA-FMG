@@ -1,13 +1,8 @@
 ###############################################################################
-## Stage 4c (2026-10-19, released 2026-11-16): mutation status vs expression of the same FMG
-## (Results 3.1, last paragraph; Table S1)
+## Stage 4c: mutation status vs expression of the same FMG
 ##
-## For each FMG with >= 3 mutated tumors, expression (log2(norm_count + 1)) is compared between tumors with and without
-## a functional mutation in that gene (Wilcoxon rank-sum, R default). Functional variants as in stage 04.
-##   _180 columns: the 180 tumors with both MC3 calls and RNA-seq data — the values reported in the manuscript.
-##   _181 columns: all 181 expression samples, with the one RNA-only EAC tumor (no MC3 calls) counted as wild-type,
-##                 kept for comparison.
 ## Inputs  data/expr_ESCA_tumor.csv, data/ESCA_mc3.csv, tables/Tab1_2_FMG_list_primary.csv
+##
 ## Output  tables/Tab04c_FMG_mutation_vs_expression.csv
 ###############################################################################
 expr <- read.csv("data/expr_ESCA_tumor.csv", check.names = FALSE)

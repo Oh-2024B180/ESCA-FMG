@@ -1,21 +1,5 @@
 ###############################################################################
-## the panels of Figures 3 and 8-11 whose text was below 7 pt at the printed size
-## (audit 11-15: 3b, 8a, 8b, 9b, 10b, 11a), redrawn with the helpers of redraw_fig4_fig5_fig7.R.
-##
-##   Rscript redraw_fig3_fig8_to_11.R [3] [8] [9] [10] [11]        (R 4.4.1; default: all)
-##
-## Figures 8 and 9 are drawn whole: 8 takes the layout of the new Figure 7, and 9b needs more room than its old cell,
-## so 9 is laid out again and 9a/9c (6-6.5 pt) are redrawn with it. For 3b, 10b and 11a only the panel is drawn, at
-## the pixel size of its place in figures/assembled/fig_2, fig_9, fig_10.jpg; paste_panels.py puts them in.
-## Sources (read-only), the code that drew the published panels:
-##   8   scripts/11c_external_figures.R: Tab11b (stage 11b, training scale), GSE53625 series matrix + cache/GPL18109_pipe.rda
-##   9   figures/remake/v3_fig8_10_remake.R: TCGA clinical matrix, Tab12_RS_clinical_test/immune_spearman/immune_wilcoxon,
-##       Tab8A-C, expression
-##   3b  scripts/05_TCGA_CNV_analysis.R: Tab5_TCGA_CNV_frequency.csv, gene order of Tab4
-##   11a scripts/14a_tide_rerun.R: data/esca_tide_output_hgnc_centered.txt, Tab14A_TIDE_metrics_test.csv
-##   10b nothing is recomputed: the data area of each published calibration panel (fig10b_data_*.png, cut from
-##       figures/assembled/fig_9.jpg inside the frame; extents in fig10b_extents.csv) gets new 7-pt axes
-## Stars from raw p, as in the published panels.
+## Panels of Figures 3 and 8-11 redrawn at the printed size (text 7 pt or larger)
 ###############################################################################
 which_figs <- "none"
 source("scripts/figures/redraw_fig4_fig5_fig7.R")
@@ -146,8 +130,7 @@ if ("9" %in% args) {
   cat_panel <- function(var, title, lev, pal) {
     d <- cli[!is.na(get(var)), .(RiskGroup, v = factor(get(var), levels = lev))]
     pct <- d[, .N, by = .(RiskGroup, v)][, pct := N / sum(N) * 100, by = RiskGroup]
-    # no percentages in the bars (user, 11-15): the text cites Figure 9a only for "no significant difference", and at
-    # this width the numbers hid the bar composition and did not fit the thin segments
+    # no percentages in the bars
     ggplot(pct, aes(RiskGroup, pct, fill = v)) + geom_col(width = 0.7) +
       scale_fill_manual(values = setNames(pal, lev), name = NULL, drop = TRUE) +
       scale_y_continuous(expand = expansion(mult = c(0, 0.04)), labels = function(x) sprintf("%d%%", x)) +
@@ -278,7 +261,7 @@ if ("3" %in% args) {
     labs(x = NULL, y = expression(log[2] * "(RSEM + 1) expression"), tag = "(c)") + theme_fig +
     theme(legend.position = "top", legend.margin = margin(0, 0, -4, 0), panel.grid.major.x = element_blank(),
           strip.text = element_text(size = 7), panel.spacing = unit(1.2, "mm"),
-          axis.text.x = element_blank(), axis.ticks.x = element_blank())   # groups by colour (legend); names did not fit
+          axis.text.x = element_blank(), axis.ticks.x = element_blank())   # groups by colour (legend)
 
   # (a) oncoprint, scripts/04_TCGA_mutation_oncoprint.R (n = 184 primary tumours with MC3 calls)
   mc3 <- fread(file.path(E, "data/ESCA_mc3.csv"))
@@ -296,7 +279,7 @@ if ("3" %in% args) {
   stopifnot(length(keep) == 184, all(rowSums(mat[t4$gene, ] != "") == t4$n_mut))   # = Table 2 / Tab4
   ALT <- c(Missense = "#377EB8", Nonsense = "#E41A1C", Frameshift = "#984EA3", Inframe_indel = "#FF7F00",
            Splice = "#4DAF4A", Other_functional = "#A65628")
-  ALT <- ALT[names(ALT) %in% unlist(strsplit(ml$alt, ";"))]       # legend: the types that occur (published one lacked Nonsense)
+  ALT <- ALT[names(ALT) %in% unlist(strsplit(ml$alt, ";"))]       # legend: the types that occur
   cat(sprintf("  (a) %d tumours; alteration types: %s\n", length(keep), paste(names(ALT), collapse = ", ")))
   af <- c(list(background = function(x, y, w, h) grid.rect(x, y, w * 0.92, h * 0.92, gp = gpar(fill = "#CCCCCC", col = NA))),
           lapply(ALT, function(cl) { force(cl); function(x, y, w, h) grid.rect(x, y, w * 0.92, h * 0.92, gp = gpar(fill = cl, col = NA)) }))

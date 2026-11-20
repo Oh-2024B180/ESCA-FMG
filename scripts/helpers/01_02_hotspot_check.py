@@ -1,9 +1,6 @@
 ###############################################################################
-## Stage 1/2 helper: what the CODA variant filters did to TP53 and to known hotspots (Discussion, second paragraph)
+## Stage 1/2 helper: what the CODA variant filters did to TP53 and to known hotspots
 ##
-## Prints which TP53 / PIK3CA hotspot variants are in the stage 01_02 QC table and whether any filter removed them,
-## the variants removed as possible germline (gnomAD AF 0.001-0.01), and the raw calls (SNVs and indels) in the
-## TP53 locus. Writes nothing.
 ## Inputs  tables/variant_qc_flags_v10_1.csv, tables/
 ##         mutation_matrix_primary_v10_1.csv (stage 01_02 outputs), data/variants_eso_final_masked.csv
 ##         (restricted CODA data)

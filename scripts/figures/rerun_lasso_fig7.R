@@ -1,10 +1,6 @@
 ###############################################################################
-## Figure 7 (a)-(b): the cv.glmnet object behind the published panels was not kept (the files in
-## cache/ are from another run), so the LASSO-Cox step of scripts/10_LASSO_Cox_model.R is run again on the same
-## 7 screened genes (tables/Tab10_univariate_Cox_p001_genes.csv), samples and seed. The result is kept ONLY if
-## lambda.min selects the same genes with the same coefficients as tables/Tab10_LASSO_selected_genes.csv and the
-## risk score equals tables/Tab10_risk_scores_per_sample.csv.
-##   Rscript rerun_lasso_fig7.R     (R 4.4.1)
+## Figure 7 (a)-(b): the LASSO-Cox step of stage 10 run again on the same genes, samples and seed
+##
 ## Output: figures/lasso_rerun.rds (cv.glmnet object) + lasso_rerun.log
 ###############################################################################
 suppressPackageStartupMessages({ library(data.table); library(survival); library(glmnet) })

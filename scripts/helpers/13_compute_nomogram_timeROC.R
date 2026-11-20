@@ -1,9 +1,6 @@
 ###############################################################################
 ## Stage 13 helper — Compute nomogram time-dependent AUC (1/2/3-year)
 ##
-## Purpose: reproduces the stage 13 nomogram (cph model, complete cases n = 145) and computes the
-## time-dependent AUC of its linear predictor at 1, 2 and 3 years with timeROC.
-##
 ## Inputs:
 ##   - data/TCGA.ESCA.sampleMap_ESCA_clinicalMatrix.csv
 ##   - tables/Tab10_risk_scores_per_sample.csv
@@ -11,14 +8,6 @@
 ## Outputs:
 ##   - tables/Tab13_nomogram_timeROC_AUC.csv
 ##   - logs/fix_logs/13_compute_nomogram_timeROC.log
-##
-## Settings:
-##   - Nomogram CC n: 145
-##   - Variables: RiskScore + histology + stage + residual
-##   - timeROC times: 365, 730, 1095 days (1/2/3-year)
-##
-## Reference PMID:
-##   - 24027076: Blanche P 2013 Stat Med — timeROC competing risks
 ##
 ## Random seed: 1262118388 (CLAUDE.md §4.3)
 ###############################################################################

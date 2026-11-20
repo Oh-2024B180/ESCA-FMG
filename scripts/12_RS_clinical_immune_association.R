@@ -1,27 +1,6 @@
 ###############################################################################
 ## Stage 12 Association of RS with Clinical and Immune Characteristics
 ##
-## 12A: Risk group (Low/High) clinical variable distribution
-## Variables (10):
-## - Continuous: age_at_initial_pathologic_diagnosis
-## - Categorical: gender, pathologic_stage, neoplasm_histologic_grade,
-## residual_tumor, histological_type,
-## alcohol_history_documented, tobacco_smoking_history,
-## reflux_history, barretts_esophagus
-## Statistics: Wilcoxon (cont) / chi-square / Fisher (cell <5)
-## raw p < 0.05 (per Liu 2024 §2.13; BH-adjusted p retained as supplementary in CSV)
-## 12B: RS (continuous) immune feature Spearman correlation
-## 102 features (3 ESTIMATE + 22 CIBERSORT + 28 ssGSEA Bindea +
-## 30 immune checkpoint + 19 HLA)
-## raw p < 0.05 (per Liu 2024 §2.13; BH-adjusted p retained as supplementary in CSV)
-## 12C: risk group x immune feature Wilcoxon (same 102 features)
-## raw p < 0.05 (per Liu 2024 §2.13; BH-adjusted p retained as supplementary in CSV)
-## 12D: set.seed(1262118388)
-##
-## Reference PMIDs:
-## 27207943 : Gu 2016, Bioinformatics — ComplexHeatmap
-## (Spearman / Wilcoxon / chi-square / Fisher = textbook standard, no PMID)
-##
 ## Inputs:
 ## data/expr_ESCA_tumor.csv (RSEM log2(x+1))
 ## data/TCGA.ESCA.sampleMap_ESCA_clinicalMatrix.csv (clinical)
@@ -41,12 +20,6 @@
 ## figures/Fig8D_RS_immune_wilcoxon_boxplot.{pdf,png}
 ## logs/12_RS_association_YYYYMMDD.log
 ## logs/sessionInfo_stage12.txt
-##
-## Notes:
-## - Hyphenated gene names (HLA-A, 4-1BB, ...) are handled as string columns;
-## no R formulas are used (Wilcoxon/Spearman on vectors), so no backticks are needed.
-## An alias table is applied (SLAMF4 -> CD244, etc.); the other 13 genes keep their SYMBOL.
-## - color: ColorBrewer Set1 (Low=blue, High=red), color-blind-safe.
 ###############################################################################
 
 # run from the repository root (see README.md)
@@ -347,21 +320,20 @@ stopifnot(length(ckpt_liu) == 30)
 ckpt_ncbi <- ifelse(ckpt_liu %in% names(liu_to_ncbi),
                     unname(liu_to_ncbi[ckpt_liu]),
                     ckpt_liu)
-# Note: 4-1BB-L = TNFSF9 == 4-1BB (TNFRSF9 is the receptor side); Liu 2024 naming kept.
 # expression matrix lookup
 expr_genes <- expr$sample
 ckpt_match <- match(ckpt_ncbi, expr_genes)
 n_match <- sum(!is.na(ckpt_match))
-cat(sprintf(" Immune checkpoint matched: %d / 30 (LiuCBI mapping)\n", n_match))
+cat(sprintf(" Immune checkpoint matched: %d / 30\n", n_match))
 if (n_match < 30) {
   miss <- ckpt_liu[is.na(ckpt_match)]
   cat(sprintf(" Missing: %s\n", paste(miss, collapse = ", ")))
 }
 ckpt_keep_idx <- !is.na(ckpt_match)
 ckpt_mat <- t(as.matrix(expr[ckpt_match[ckpt_keep_idx], ..samples_keep]))
-colnames(ckpt_mat) <- ckpt_liu[ckpt_keep_idx] # Liu
+colnames(ckpt_mat) <- ckpt_liu[ckpt_keep_idx]
 ckpt_features <- colnames(ckpt_mat)
-cat(sprintf(" Immune checkpoint features (Liu naming): %d\n", length(ckpt_features)))
+cat(sprintf(" Immune checkpoint features: %d\n", length(ckpt_features)))
 
 # 4.5 HLA family 19 genes
 hla_genes <- c("HLA-A","HLA-B","HLA-C","HLA-DMA","HLA-DMB","HLA-DOA","HLA-DOB",

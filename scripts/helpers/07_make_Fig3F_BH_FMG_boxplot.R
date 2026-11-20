@@ -1,23 +1,6 @@
 ###############################################################################
 ##  Fig 3F (alt) — 18 FMG mRNA expression: C1 vs C2 boxplot with BH-adj sig
 ##
-##  Purpose:
-##    - Re-make the FMG cluster-difference boxplot to align with the BH-adjusted
-##      significance convention used by Stage 8 figures (CIBERSORTx, ssGSEA,
-##      checkpoint, HLA).
-##    - The original Stage 7 figure used raw p-values + "Cluster 1"/"Cluster 2"
-##      labels; this version uses the notation of the other figures.
-##
-##  Three changes vs original raw-p version (Fig3F_FMG_expr_diff_k2_rawp):
-##    1. raw p stars  ->  BH-adjusted p stars (18-gene multiple testing)
-##    2. cluster label "Cluster 1"/"Cluster 2"  ->  "C1"/"C2"
-##    3. cluster colors  ->  Stage 7 CLUSTER_COLORS (Dark2 palette):
-##         C1 = "#1B9E77" (green), C2 = "#D95F02" (orange)
-##
-##  Stage 7 outputs are NOT touched — Tab7_cluster_assignment.csv,
-##  Tab7_cluster_summary.csv, Fig3A..Fig3E, Fig3F_FMG_heatmap_clusters
-##  remain unchanged. Only this new boxplot + its stats/log are written.
-##
 ##  Inputs:
 ##    data/expr_ESCA_tumor.csv                          (log2(RSEM+1), col1 = gene SYMBOL)
 ##    tables/Tab7_cluster_assignment.csv        (sampleID, cluster, histology, OS, OS.time)
@@ -27,9 +10,6 @@
 ##    tables/Tab7C_FMG_expr_diff_clusters_C1vsC2.csv
 ##    figures/Fig3F_supp_FMG_expr_diff_BH.{pdf,png}
 ##    logs/3F2_FMG_boxplot_diagnostics.txt
-##
-##  Random seed: 1262118388 (Liu 2024 aligned)
-##
 
 # ── 1. PATHS / VARIABLES ────────────────────────────────────────────────────
 PROJECT_ROOT <- getwd()   # run from the repository root (see README.md)
@@ -37,7 +17,7 @@ PROJECT_ROOT <- getwd()   # run from the repository root (see README.md)
 INPUT_EXPR    <- "data/expr_ESCA_tumor.csv"
 INPUT_CLUSTER <- "tables/Tab7_cluster_assignment.csv"
 INPUT_FMG     <- "tables/Tab1_2_FMG_list_primary.csv"
-# Use Stage 4 Tab4 mutation prevalence order for x-axis (Fig2A/2B/2C convention)
+# Use Stage 4 Tab4 mutation prevalence order for x-axis
 INPUT_TAB4    <- "tables/Tab4_TCGA_mutation_frequency.csv"
 
 OUT_TBL  <- "tables/Tab7C_FMG_expr_diff_clusters_C1vsC2.csv"

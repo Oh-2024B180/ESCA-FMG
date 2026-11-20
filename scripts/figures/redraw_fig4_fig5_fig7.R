@@ -1,20 +1,5 @@
 ###############################################################################
-## Figures 4, 5 and 7 redrawn at the size they are printed (16.5 cm wide,
-## text 7-7.5 pt, panel tags 10 pt bold), as was done for Figures 2 and 6 (redraw_fig2_fig6.R).
-##
-##   Rscript redraw_fig4_fig5_fig7.R [4] [5] [7]      (R 4.4.1; default: all three)
-##
-## Sources (read-only). Nothing reported in the text is recomputed differently:
-##   Figure 4  (a)-(c) ccp_rerun.rds = scripts/07 STEP 2-6 run again with the same inputs and seed
-##             (rerun_ccp_fig4.R: k = 2 assignment identical to Tab7_cluster_assignment.csv; PAC and delta area
-##             equal to the points of figures/Fig3B_PAC_score.pdf to 4 decimals);
-##             (d)-(f) scripts/07 STEP 10-13 on the same z-scored 18-FMG matrix; (g) figures/remake/v3_fig3G_violin.R
-##   Figure 5  (a) Tab8A (script 08 Fig4A), stars from raw p;
-##             (b)-(e) Tab8B-E + Hodges-Lehmann CIs exactly as figures/remake/v3_fig4_BCDE_lollipop_forest.R
-##   Figure 7  (a)-(b) lasso_rerun.rds = the cv.glmnet step of scripts/10 run again (rerun_lasso_fig7.R:
-##             coefficients and risk scores equal to Tab10 to 1e-15); (c)-(e) Tab10 risk scores, scripts/10 code
-## Earlier pixel corrections now in the code: gene symbols in italics, "x 10^-k" and en dashes,
-## AUC CIs in Fig 7d, raw-p stars in Fig 5a.
+## Figures 4, 5 and 7 redrawn at the printed size (16.5 cm wide, text 7-7.5 pt, panel tags 10 pt bold)
 ###############################################################################
 suppressPackageStartupMessages({
   library(data.table); library(ggplot2); library(patchwork); library(ragg); library(ggrepel); library(grid)
@@ -133,7 +118,7 @@ if ("5" %in% which_figs) {
                     else effect) + sign(effect) * rng * 0.04]
     p <- ggplot(dt, aes(effect, label, colour = dir)) +
       geom_vline(xintercept = 0, colour = "grey50", linewidth = 0.3)
-    # legend keys from the points only, so that the lollipop and forest panels share one legend
+    # legend keys from the points only
     p <- if (ci) p + geom_errorbar(aes(xmin = lo, xmax = hi), width = 0.45, linewidth = 0.35, orientation = "y", show.legend = FALSE)
          else p + geom_segment(aes(x = 0, xend = effect, yend = label), linewidth = 0.45, show.legend = FALSE)
     p <- p + geom_point(size = 1.2) +
@@ -151,7 +136,7 @@ if ("5" %in% which_figs) {
   bin <- tb("Tab8C_ssGSEA_Bindea_celltype_stats.csv")
   pc <- rank_panel(bin[, .(label = cell_type, effect = median_C1 - median_C2, p_value)],
                    paste0("Median score difference (C1 ", MINUS, " C2)"))
-  hl_ci <- function(sym) {                       # Hodges-Lehmann 95% CI of C1 - C2, as in v3_fig4_BCDE
+  hl_ci <- function(sym) {                       # Hodges-Lehmann 95% CI of C1 - C2
     t(vapply(sym, function(g) {
       v <- expr_row(g, clu$sampleID)
       w <- wilcox.test(v[clu$cluster == "C1"], v[clu$cluster == "C2"], conf.int = TRUE, exact = FALSE)
@@ -189,10 +174,10 @@ if ("7" %in% which_figs) {
   cat("Figure 7 (prognostic model)\n")
   cv <- readRDS(file.path(OUT, "lasso_rerun.rds"))
   fit <- cv$glmnet.fit
-  gene_order <- rownames(fit$beta)                       # screening order = heat-map order of the published panel
+  gene_order <- rownames(fit$beta)                       # screening order
   path <- data.table(gene = rep(gene_order, ncol(fit$beta)), x = rep(-log(fit$lambda), each = nrow(fit$beta)),
                      coef = as.vector(as.matrix(fit$beta)))
-  # top axis as glmnet's plotCoef: value at each break by approx(method = "constant", f = 1); gives 2, 7, 7, 7 as published
+  # top axis as glmnet's plotCoef: value at each break by approx(method = "constant", f = 1)
   at <- function(v, lam, val) { y <- rep(NA_character_, length(v)); ok <- !is.na(v)
     y[ok] <- approx(-log(lam), val, xout = v[ok], method = "constant", f = 1, rule = 2)$y; y }
   gcol <- setNames(c("#E41A1C", "#377EB8", "#4DAF4A", "#984EA3", "#FF7F00", "#A65628", "#F781BF"), gene_order)
@@ -209,7 +194,7 @@ if ("7" %in% which_figs) {
     scale_y_continuous(labels = lab_num) +
     labs(x = expression(-log(lambda)), y = "Coefficient", tag = "(a)") + theme_fig + theme(axis.title.x.top = element_text(size = 7))
   cvd <- data.table(x = -log(cv$lambda), m = cv$cvm, lo = cv$cvlo, hi = cv$cvup)
-  # dotted lines at lambda.1se and lambda.min as in the published panel (unlabelled)
+  # dotted lines at lambda.1se and lambda.min (unlabelled)
   vl <- data.table(x = -log(c(cv$lambda.1se, cv$lambda.min)))
   pB <- ggplot(cvd, aes(x, m)) +
     geom_vline(data = vl, aes(xintercept = x), linetype = "dotted", linewidth = 0.4) +
@@ -306,8 +291,8 @@ if ("4" %in% which_figs) {
     facet_wrap(~m, scales = "free_y") + scale_x_continuous(breaks = 2:9) +
     labs(x = "k", y = NULL, tag = "(b)") + theme_fig
   cl_ord <- cc$samples[order(cc$class2[cc$samples])]        # scripts/07 STEP 10 order
-  # (c) consensus matrix as in scripts/07 STEP 10 (white -> #08519C, cluster bar on top), drawn as a ggplot raster so
-  # that its legend is laid out like the other panels; row 1 at the top as in the ComplexHeatmap original
+  # (c) consensus matrix (white -> #08519C, cluster bar on top), drawn as a ggplot raster so
+  # that its legend is laid out like the other panels; row 1 at the top
   n <- length(cl_ord); n1 <- sum(cc$class2 == "C1")
   cmd <- data.table(x = rep(seq_len(n), each = n), y = rep(n:1, times = n), v = as.vector(cc$cm2[cl_ord, cl_ord]))
   pc <- ggplot(cmd, aes(x, y, fill = v)) + geom_raster() +
@@ -344,8 +329,7 @@ if ("4" %in% which_figs) {
   ord2 <- order(cc$class2[cc$samples])
   hist <- clu$histology[match(cc$samples[ord2], clu$sampleID)]
   HIST <- c(ESCC = "#7570B3", EAC = "#E7298A")
-  # row clustering exactly as ComplexHeatmap did it for the published panel (same call as scripts/07 STEP 13);
-  # the panel itself is a ggplot so that it is laid out like the others
+  # row clustering with the same call as scripts/07 STEP 13
   pdf(NULL)
   hd <- draw(Heatmap(mz[, ord2], cluster_columns = FALSE, cluster_rows = TRUE,
                      column_split = factor(cc$class2[cc$samples][ord2])))

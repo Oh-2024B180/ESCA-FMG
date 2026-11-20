@@ -1,41 +1,12 @@
 ###############################################################################
 ##  Stage 8 / Step B — IMPORT CIBERSORTx (B-mode) result + downstream
 ##
-##  Reason:
-##    Vanilla CIBERSORT (both log+QN=TRUE and linear+QN=FALSE) produced
-##    deconvolution failure (mean Correlation < 0.03, ~1-3 / 181 samples
-##    passing ciber_p<0.05). Cause: TCGA RNA-seq RSEM mixture × LM22
-##    Affymetrix microarray reference cross-platform mismatch.
-##
-##  Solution (B-mode batch correction; Newman et al. 2019 *Nat Biotechnol*):
-##    Run CIBERSORTx web tool with Batch correction = enabled, Mode = B
-##    (RNA-seq mixture × microarray signature cross-platform mode).
-##    Diagnostic: mean Correlation ~0.479, ciber_p<0.05 pass ~99.4% — PASS.
-##
-##  This script:
-##    - Imports CIBERSORTx web result (no local CIBERSORT call)
-##    - Runs same 3-tier verdict + Wilcoxon downstream + figures
-##    - Overwrites Stage 8 / Step B outputs with corrected results
-##
-##  CIBERSORTx run options (recorded in diagnostic log header):
-##    Job ID            : 3 (Stanford CIBERSORTx)
-##    Date              : 2026-05-05 05:05:37
-##    Signature matrix  : LM22.update-gene-symbols.txt (CIBERSORTx updated)
-##    Mixture           : tcga_mixture_linear_for_cibersort.tsv (linear-space)
-##    Batch correction  : enabled, B-mode
-##    Disable QN        : true
-##    Run mode          : relative
-##    Permutations      : 100
-##
 ##  Outputs (overwrite):
 ##    Tab8B_CIBERSORT_results.csv           per-sample 22 cell types + p/corr/RMSE + cluster + histology
 ##    Tab8B_CIBERSORT_celltype_stats.csv    per-cell-type C1 vs C2 Wilcoxon
 ##    Fig4B_CIBERSORT_clusters.{pdf,png}    boxplot, 6-col facet  (title: "CIBERSORTx (B-mode)")
 ##    Fig4B_supp_CIBERSORT_stackedbar.{pdf,png}  stacked bar      (title: "CIBERSORTx (B-mode)")
 ##    08B_cibersortx_import_diagnostics.txt
-##
-##  Untouched: Tab8A, Tab8C, Tab8D, Tab8E, Fig4A, Fig4C, Fig4D, Fig4E
-##
 
 # ── 1. PATHS / VARIABLES (user-editable) ─────────────────────────────────
 PROJECT_ROOT <- getwd()   # run from the repository root (see README.md)
@@ -61,7 +32,7 @@ FIG_STACK_PDF  <- file.path(OUT_FIG_DIR, "Fig4B_supp_CIBERSORT_stackedbar.pdf")
 FIG_STACK_PNG  <- file.path(OUT_FIG_DIR, "Fig4B_supp_CIBERSORT_stackedbar.png")
 DIAG_LOG       <- file.path(OUT_LOG_DIR, "08B_cibersortx_import_diagnostics.txt")
 
-# Verdict thresholds (same as the rerun script)
+# Verdict thresholds
 PASS_CORR     <- 0.30
 PASS_PASSRATE <- 0.30
 MARGINAL_CORR <- 0.15

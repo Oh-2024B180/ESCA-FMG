@@ -1,11 +1,9 @@
 ###############################################################################
-## Stage 14A re-run, part 2 of 2 (2026-10-19): risk-group tests and the TIDE panel on the corrected TIDE output
+## Stage 14A re-run, part 2 of 2: risk-group tests and the TIDE panel on the corrected TIDE output
 ##
-## Part 1 (scripts/14a_tide_rerun.py) re-ran TIDEpy 1.3.9 on a singly logged, gene-centred input
-## (data/esca_tide_output_hgnc_centered.txt). This part repeats, unchanged, the code that used the April output:
-##   - tests: stage 14A of scripts/14_treatment_response_prediction.R ([14A.2]-[14A.4]: Wilcoxon for the 11
-##     continuous metrics, chi-square or Fisher for Responder / No.benefits / CTL.flag); only the input file differs
-##   - panel: the Fig10A block of figures/remake/v3_fig8_10_remake.R (manuscript Figure 11a), same size and style
+## Inputs  data/esca_tide_output_hgnc_centered.txt (part 1), tables/Tab10_risk_scores_per_sample.csv,
+##         data/TCGA.ESCA.sampleMap_ESCA_clinicalMatrix.csv
+##
 ## Outputs tables/Tab14A_TIDE_metrics_test.csv, tables/Tab14A_responder_chisq.csv,
 ##         figures/remake/Fig10A_TIDE_metrics_boxplot_v3.{pdf,png}, logs/14a_tide_rerun_R.log
 ###############################################################################

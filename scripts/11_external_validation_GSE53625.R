@@ -1,27 +1,5 @@
 ###############################################################################
 ## Stage 11: External Validation GSE53625 (n=179 ESCC) + AnnoProbe
-##
-## Model: 7-gene protein-coding LASSO-Cox (Stage 10)
-## FOLR3, ZBTB7C, RPRML, HEPACAM2, CLCA1, CACNG8, LIPC
-##
-## 11A: GSE53625 ESCC (GPL18109); GSE180791 excluded
-## 11B: gene-level z-score normalization (cross-platform)
-## 11C: KM (log-rank), time-dependent ROC, Concordance index
-##
-## Probe annotation:
-## - probe SYMBOL from **AnnoProbe::idmap("GPL18109")** (not biomaRt ENST)
-## AnnoProbe maps probes by sequence alignment and covers all 71,584 probes;
-## the biomaRt ENST mapping covered 4.3% (3,054 probes) and none of the 7 genes.
-## - Clinical extraction is column-name-aware
-##
-## Settings:
-## 1. probe annotation : AnnoProbe::idmap
-## 2. GSE180791 : excluded
-## 3. Survival units : months -> days (x 30.4375)
-## 4. Sample filter : tumor only (179 ESCC)
-## 5. Median cutoff : (a) TCGA training first, (b) fallback if imbalanced
-##
-## Random seed: 1262118388
 ###############################################################################
 
 # run from the repository root (see README.md)
@@ -235,8 +213,6 @@ if (at_risk_5yr < AT_RISK_MIN) {
 roc_res <- timeROC(T = clin_dt$OS.time, delta = clin_dt$OS, marker = risk_score,
                    cause = 1, times = roc_times_used, iid = TRUE)
 auc_vec <- as.numeric(roc_res$AUC)
-# 2026-10-06: vect_sd_1 already is the standard error of the AUC; the earlier sqrt() made the 95% CI
-# far too wide. Corrected table: helpers/11_fix_cindex_timeROC_tables.R
 sd_vec <- tryCatch(as.numeric(roc_res$inference$vect_sd_1),
                       error = function(e) rep(NA_real_, length(auc_vec)))
 auc_low <- pmax(0, auc_vec - 1.96 * sd_vec)
@@ -247,10 +223,7 @@ roc_tbl <- data.table(cohort = "GSE53625", time_label = roc_labels,
 fwrite(roc_tbl, file.path(TBLDIR, "Tab11_GSE53625_timeROC_AUC.csv"))
 print(roc_tbl)
 
-# 2026-10-06: the C-index of the FIXED score, higher score = shorter survival. The earlier code read
-# summary(coxph(Surv ~ risk_score))$concordance from a model refitted inside GSE53625; a refit
-# re-estimates the sign of the score, so the inverted association seen here (HR 0.85, AUC below 0.5)
-# still gave a value above 0.5 (0.517). The fixed score has C = 0.483 (95% CI 0.424-0.543).
+# C-index of the fixed score, higher score = shorter survival
 cidx_fixed <- function(time, event, score) {
   k <- concordance(Surv(time, event) ~ score, reverse = TRUE)
   c(C = unname(k$concordance), se = sqrt(k$var))

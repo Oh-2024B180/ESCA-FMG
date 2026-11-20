@@ -1,20 +1,8 @@
 ###############################################################################
 ##  Build canonical Bindea 28 immune signature for Stage 8C ssGSEA
 ##
-##  Sources:
-##    1. IOBR R package v2.2.0 signature_collection (27 *_Bindea_et_al keys)
-##       - faithful to Bindea 2013 supp Table 1 per content validation
-##       - missing only NK CD56bright cells
-##    2. NK CD56bright cells (6 genes) extracted directly from
-##       Bindea 2013 *Immunity* (PMID 24138885) supp Table 1
-##       (cache/bindea_supp.txt, mmc1.pdf pages around Table S1 (3/6))
-##
 ##  Output:
 ##    data/Bindea_28_signatures.tsv  (long: cell_type, gene_symbol)
-##
-##  Validation:
-##    - 28 canonical cell types (Bindea 2013 supp methods + Table S1)
-##    - ~577-585 unique genes (Bindea 2013 published: 577)
 ###############################################################################
 
 # run from the repository root (see README.md)
@@ -33,7 +21,7 @@ sc <- e$signature_collection
 bin_keys <- grep("Bindea_et_al$", names(sc), value = TRUE)
 cat(sprintf("IOBR Bindea signatures: %d cell types\n", length(bin_keys)))
 
-# Map IOBR keys to canonical cell type names (Bindea 2013 supp methods convention)
+# Map IOBR keys to canonical cell type names
 iobr_to_canonical <- c(
   "B_cells_Bindea_et_al"            = "B cells",
   "T_cells_Bindea_et_al"            = "T cells",

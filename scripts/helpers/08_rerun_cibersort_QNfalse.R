@@ -1,34 +1,12 @@
 ###############################################################################
 ##  Stage 8 / Step B (CIBERSORT) — RERUN with linear-space input + QN=FALSE
 ##
-##  Reason for rerun:
-##    Previous run (log2(RSEM+1) input + QN=TRUE) showed deconvolution failure:
-##      mean Correlation ≈ 0.024 (normal ≥ 0.5)
-##      Only 3 / 181 samples passed ciber_p < 0.05 → cell-type proportions
-##      essentially noise.
-##    Cause: log2(RSEM+1) + QN=TRUE mismatches LM22 reference space
-##           (LM22 was built on Affymetrix HGU133+2.0 microarray, linear scale).
-##    Fix (per Newman et al. 2015 Nat Methods + CIBERSORT FAQ for RNA-seq):
-##      use linear-space input + QN=FALSE.
-##
-##  CRITICAL CHANGES vs original Step B (exactly 2):
-##    1. Mixture matrix: log2(RSEM+1) -> linear via 2^x - 1, floor negatives to 0
-##    2. CIBERSORT option: QN = TRUE -> QN = FALSE
-##    perm = 1000  (unchanged)
-##
-##  Inputs / Outputs are exposed as variables at the top of this script so that
-##  the user can adjust paths without editing the body.
-##
-##  Outputs (overwrite previous Step B):
+##  Outputs (overwrite):
 ##    Tab8B_CIBERSORT_results.csv          (per-sample 22 cell types + p/corr/RMSE + cluster + histology)
 ##    Tab8B_CIBERSORT_celltype_stats.csv   (per-cell-type C1 vs C2 Wilcoxon)
 ##    Fig4B_CIBERSORT_clusters.{pdf,png}   (per-cell-type boxplot, 6-col facet)
 ##    Fig4B_supp_CIBERSORT_stackedbar.{pdf,png}  (per-sample stacked bar, cluster-faceted)
 ##    08B_rerun_diagnostics.txt            (Correlation/p/RMSE summary + verdict)
-##
-##  NOT touched (downstream of original Step A/C/D/E):
-##    Tab8A, Tab8C, Tab8D, Tab8E and Fig4A / Fig4C / Fig4D / Fig4E
-##
 
 # ── 1. PATHS / VARIABLES (user-editable) ─────────────────────────────────
 # Working directory
@@ -64,7 +42,7 @@ PASS_CORR     <- 0.30
 PASS_PASSRATE <- 0.30
 MARGINAL_CORR <- 0.15
 
-# Cluster + histology palettes (same as stages 7 and 8)
+# Cluster + histology palettes
 CLUSTER_COL <- c(C1 = "#E41A1C", C2 = "#377EB8")
 
 # ── 2. PACKAGES + SEED ──────────────────────────────────────────────────────

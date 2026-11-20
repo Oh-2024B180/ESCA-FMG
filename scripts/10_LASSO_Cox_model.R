@@ -1,19 +1,6 @@
 ###############################################################################
 ## Stage 10: LASSO-Cox Prognostic Risk Model (protein-coding only)
 ##
-## - 10A: Univariate Cox p < 0.01
-## - 10B: model-friendly gene SYMBOL (alphanumeric, no '-' start, no special)
-## - 10C: glmnet family="cox", alpha=1, 10-fold CV, lambda.min
-## - 10D: RS = sum(coefficient x expression)
-## - 10E: Median RS cutoff
-## - 10F: KM + timeROC + RS distribution
-##
-## The stage 9 candidate pool is protein-coding only,
-## so the genes satisfy 10B (lncRNAs such as RP11-* are excluded).
-##
-## Fig6A/6B: to avoid title-axis overlap,
-## par(mar = c(5, 4, 6, 4)) and mtext title at line = 4.
-##
 ## Inputs:
 ## data/expr_ESCA_tumor.csv
 ## data/survival_ESCA_survival.csv
@@ -166,7 +153,7 @@ sel_idx <- which(coef_vec != 0)
 selected_genes <- names(coef_vec)[sel_idx]
 selected_coefs <- coef_vec[sel_idx]
 n_sel <- length(selected_genes)
-cat(sprintf(" LASSO selected : %d genes (Liu 2024 = 7 for AML)\n", n_sel))
+cat(sprintf(" LASSO selected : %d genes\n", n_sel))
 
 sel_dt <- data.table(gene = selected_genes, coefficient = selected_coefs,
                      HR = exp(selected_coefs),
@@ -226,8 +213,6 @@ if (at_risk_5yr < AT_RISK_MIN) {
 roc_res <- timeROC(T = os_time, delta = os_event, marker = risk_score, cause = 1,
                    times = roc_times_used, iid = TRUE)
 auc_vec <- as.numeric(roc_res$AUC)
-# 2026-10-06: vect_sd_1 already is the standard error of the AUC; the earlier sqrt() made the 95% CI
-# far too wide (0.337-1.000 for an AUC of 0.755). Corrected table: helpers/11_fix_cindex_timeROC_tables.R
 sd_vec <- tryCatch(as.numeric(roc_res$inference$vect_sd_1),
                     error = function(e) rep(NA_real_, length(auc_vec)))
 auc_low <- pmax(0, auc_vec - 1.96 * sd_vec)
@@ -238,7 +223,7 @@ roc_tbl <- data.table(time_label = roc_labels, time_days = roc_times_used,
 fwrite(roc_tbl, file.path(TBLDIR, "Tab10_timeROC_AUC.csv"))
 print(roc_tbl)
 
-# Fig 6A LASSO coefficient path (with par(mar) cosmetic fix)
+# Fig 6A LASSO coefficient path
 cat("\n[9/14] Fig6A LASSO coefficient path\n")
 draw_6A <- function() {
   # Lambda lines also removed (lambda values preserved in log).
@@ -253,7 +238,7 @@ ragg::agg_png(file.path(FIGDIR, "Fig6A_LASSO_coefficient_path.png"), width = 7, 
 draw_6A(); dev.off()
 cat(" [OK] Fig6A_LASSO_coefficient_path.{pdf,png}\n")
 
-# Fig 6B CV deviance (with par(mar) fix)
+# Fig 6B CV deviance
 cat("\n[10/14] Fig6B CV deviance plot\n")
 draw_6B <- function() {
   par(mar = c(5, 4, 2, 2))

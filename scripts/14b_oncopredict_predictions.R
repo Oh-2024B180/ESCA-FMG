@@ -1,9 +1,9 @@
-# Stage 14b (2026-10-19): does the oncoPredict result depend on feeding GDSC2_Res (ln IC50) to calcPhenotype()
-# without exp()? The package vignette exponentiates first ("the IC50s are actual ln values ... calcPhenotype will do a
-# power transformation ... better to not have both transformations"). Stage 14C did not.
-#   run A = stage 14C settings (ln IC50 in)            -> must reproduce tables/Tab14C_oncoPredict_IC50_full.csv
-#   run B = vignette (exp(ln IC50) in, i.e. IC50)      -> predictions back on the IC50 scale; compared on ln scale
-# Writes A.rds and B.rds into OUT and run B as tables/Tab14Cb_oncoPredict_IC50_vignette.csv (read by stage 14c).
+# Stage 14b: oncoPredict predictions from ln IC50 (run A, stage 14C settings) and from IC50 (run B, package vignette)
+#
+# Inputs  data/GDSC2_Expr (RMA Normalized and Log Transformed).rds, data/GDSC2_Res.rds, data/expr_ESCA_tumor.csv,
+#         tables/Tab10_risk_scores_per_sample.csv, tables/Tab14C_oncoPredict_IC50_full.csv
+#
+# Outputs cache/oncopredict_runs/A.rds, B.rds; run B as tables/Tab14Cb_oncoPredict_IC50_vignette.csv
 suppressPackageStartupMessages({ library(data.table); library(oncoPredict) })
 E <- ""   # repository root = working directory (see README.md)
 OUT <- "cache/oncopredict_runs/"

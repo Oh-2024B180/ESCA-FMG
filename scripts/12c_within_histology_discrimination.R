@@ -1,17 +1,9 @@
 ###############################################################################
 ## Stage 12c: discrimination of the risk score within each histology
-## (Methods 2.10 and 2.14; Results 3.7; Table 4, rows "Within histology")
 ##
-## The fixed risk score of stage 10 is evaluated separately in the ESCC and the EAC tumors of TCGA-ESCA:
-##   - C-index of the continuous score: survival::concordance(reverse = TRUE), a higher score counting as higher risk;
-##     95% CI = C +/- 1.96 * sqrt(var), as for the other C-index values (Methods 2.14)
-##   - univariate Cox regression of the continuous score (HR per unit)
-##   - the risk groups of stage 10 (training-cohort median cutoff, -0.0026): numbers high/low, Cox HR high vs low,
-##     log-rank p
-## The values were first computed on 2026-10-06 by a read-only review check; this script makes them reproducible
-## from the stored stage outputs.
 ## Inputs  tables/Tab10_risk_scores_per_sample.csv (RiskScore, RiskGroup, OS, OS.time),
 ##         tables/Tab7_cluster_assignment.csv (histology)
+##
 ## Output  tables/Tab12c_within_histology_discrimination.csv
 ###############################################################################
 suppressPackageStartupMessages({ library(survival); library(data.table) })

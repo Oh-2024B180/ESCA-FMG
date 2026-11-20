@@ -1,30 +1,12 @@
 ###############################################################################
-## Stage 14A re-run, part 1 of 2 (2026-10-19): TIDE with a correctly transformed input
+## Stage 14A re-run, part 1 of 2: TIDE with a correctly transformed input
 ##
-## Why: the April run (2026-04-19, according to the command history of the analysis computer) was
-##   tidepy esca_tide_input_hgnc_selfsubtract.txt -o esca_tide_output_hgnc_self.txt -c Other --ignore_norm
-## with TIDEpy 1.3.9, and its input had been made by make_tide_input_hgnc.py as log2(x + 1) of values that were
-## already log2(norm_count + 1) (UCSC Xena), then centred on the gene-wise mean. The other April output, from the
-## un-centred HGNC matrix without --ignore_norm, is identical, because TIDEpy itself applies log2(x + 1) and centring
-## when more than 80% of the values are positive. Both April outputs therefore rest on a doubly logged matrix.
-##
-## What this script does:
-##   1. rebuilds the April HGNC matrix (log2(norm_count + 1), one row per approved symbol, the highest-variance row
-##      kept for duplicated symbols) from data/expr_ESCA_tumor.csv and the April symbol audit, and checks that it is
-##      identical to the April file;
-##   2. checks that TIDEpy here reproduces the April output from the April input exactly (same options);
-##   3. centres the HGNC matrix on the gene-wise mean across the 181 tumours WITHOUT a second log, which is what TIDE
-##      asks for ("normalized toward ... the all sample average"), and runs TIDEpy with the April options:
-##      cancer = "Other", no previous immunotherapy, vthres = 0, ignore_norm (the input is already normalized).
-##
-## Inputs  data/expr_ESCA_tumor.csv; the April folder (read only):
-##         data/tide_2026-04/{gene_symbol_audit.csv, esca_tide_input_hgnc.txt,
+## Inputs  data/expr_ESCA_tumor.csv, data/tide_2026-04/gene_symbol_audit.csv (scripts/helpers/14a_hgnc_symbol_audit.py);
+##         optional, for the checks against the April run: data/tide_2026-04/{esca_tide_input_hgnc.txt,
 ##         esca_tide_input_hgnc_selfsubtract.txt, esca_tide_output_hgnc_self.txt}
-##         gene_symbol_audit.csv is required (written by scripts/helpers/14a_hgnc_symbol_audit.py); the other three
-##         April files are used only for the checks in steps 1-3, which are skipped when the files are absent.
+##
 ## Outputs data/esca_tide_input_hgnc_centered.txt, data/esca_tide_output_hgnc_centered.txt,
 ##         logs/14a_tide_rerun_py.log
-## Part 2: scripts/14a_tide_rerun.R (risk-group tests as in stage 14A, Figure 11a panel).
 ###############################################################################
 import io, os, sys
 sys.dont_write_bytecode = True

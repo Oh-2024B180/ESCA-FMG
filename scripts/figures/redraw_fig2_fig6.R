@@ -1,21 +1,9 @@
 ###############################################################################
 ## Figures 2 and 6 redrawn at the size they are printed
-## (16.5 cm wide) from the saved result tables — no statistics are recomputed.
-##
-##   Rscript redraw_fig2_fig6.R            (R 4.4.1; plotting only)
 ##
 ## Inputs (read-only): tables/Tab3_FMG_GO_{BP,CC,MF}.csv, Tab3_FMG_KEGG.csv (Figure 2),
 ##   tables/Tab9_DEG_GO_{BP,CC,MF}.csv, Tab9_DEG_KEGG.csv, Tab9_DEG_full_C1_vs_C2.csv (Figure 6),
 ##   data/expr_ESCA_tumor.csv + tables/Tab7_cluster_assignment.csv (heatmap, Figure S1 draft)
-## Rules carried over from the published panels:
-##   GO/KEGG: top 10 terms by BH-adjusted p, shown by GeneRatio, size = Count, colour = adjusted p (red -> blue,
-##            log scale) — figures/remake/v3_fig1BC_5CD_dotplot.R. NEW: only terms with adjusted p < 0.05
-##            (Methods 2.4); in Figure 2 this removes six non-significant CC terms (p.adjust 0.055-0.097).
-##   Volcano: |log2FC| >= 1 and BH p < 0.05, top 10 labels per direction by adjusted p, top 3 framed,
-##            y capped at 20 — scripts/helpers/09_fix_Fig5A_volcano.R. Gene labels in italics.
-##   Heatmap: top 25 up / 25 down significant DEG by log2FC, row z-scores, columns by cluster then histology,
-##            rows clustered within each direction — scripts/09_DEG_between_clusters.R step 8.
-## Text: 7-7.5 pt at the printed size, panel tags 10 pt bold; adjusted p written as powers of ten.
 ###############################################################################
 suppressPackageStartupMessages({
   library(data.table); library(ggplot2); library(stringr); library(patchwork); library(ragg)
@@ -117,7 +105,7 @@ volcano <- ggplot(deg, aes(log2FC_C1minusC2, neglog10p, colour = dir_class)) +
   geom_hline(yintercept = -log10(CUT_P), linetype = "dashed", colour = "grey50", linewidth = 0.3) +
   geom_point(size = 0.35, alpha = 0.55) +
   # one label layer so framed and plain labels repel each other (two layers let boxes cover plain names);
-  # framed = top 3 per direction, filled box and bold, as in the published panel
+  # framed = top 3 per direction, filled box and bold
   geom_label_repel(data = top_all, aes(label = gene, fill = fill_key, fontface = face), size = 7 / .pt,
                    family = "Arial", label.size = NA, label.padding = unit(0.12, "lines"), max.overlaps = Inf,
                    force = 10, force_pull = 0.5, box.padding = 0.35, point.padding = 0.2, segment.alpha = 0.5,

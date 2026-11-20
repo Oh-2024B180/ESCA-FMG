@@ -1,21 +1,11 @@
 ###############################################################################
-## Stage 11b (2026-10-19): external evaluation in GSE53625 with the score on the training scale
+## Stage 11b: external evaluation in GSE53625 with the score on the training scale
 ##
-## Why: Stage 11 computed the GSE53625 score as sum(beta * z), z = gene-wise z-scores within GSE53625, and split it at
-## the TCGA median of the log2(norm_count + 1)-scale score (-0.0026). Two scale mismatches: (1) the cutoff belongs to
-## the log2 scale, not to the z scale; (2) the TCGA coefficients were fitted on genes with different spreads
-## (TCGA SD 1.7-3.4), so applying them to unit-variance z-scores changes the relative weight of the seven genes.
-## Fix: place each GSE53625 gene on its TCGA distribution,
-##   x' = mean_TCGA + SD_TCGA * z_GSE53625,
-## so the TCGA coefficients and the TCGA median cutoff apply unchanged. Everything else is as in Stage 11:
-## same 179 tumours with OS, same probe-to-gene averaging (AnnoProbe GPL18109 annotation, read from the cached file,
-## no download), same timeROC times (1, 3, 5 years), same interval methods as Table 4 and Figure 8b
-## (C-index: survival::concordance, higher score = shorter survival, C +/- 1.96 SE; AUC: timeROC iid, AUC +/- 1.96 SD).
 ## Inputs  tables/Tab10_LASSO_selected_genes.csv, tables/Tab10_risk_scores_per_sample.csv, data/expr_ESCA_tumor.csv,
 ##         data/GSE53625_series_matrix.txt.gz, cache/GPL18109_pipe.rda, tables/Tab11_GSE53625_RS_per_sample.csv
+##
 ## Outputs tables/Tab11b_GSE53625_RS_per_sample_training_scale.csv, tables/Tab11b_GSE53625_metrics_training_scale.csv,
 ##         logs/11b_external_on_training_scale.log
-## The manuscript is not changed by this script.
 ###############################################################################
 # run from the repository root (see README.md)
 log_con <- file("logs/11b_external_on_training_scale.log", open = "wt")
@@ -38,7 +28,7 @@ cut_t <- median(rs_t$RiskScore)
 cat(sprintf("TCGA: %d tumours, median score (cutoff) %.4f\n", ncol(Xt), cut_t))
 print(data.table(gene = lasso$gene, beta = lasso$coefficient, mean_TCGA = round(mu_t, 3), SD_TCGA = round(sd_t, 3)))
 
-# ---------------------------------------------------------------- GSE53625 as in Stage 11
+# ---------------------------------------------------------------- GSE53625
 pub <- fread("tables/Tab11_GSE53625_RS_per_sample.csv")
 eset <- getGEO(filename = "data/GSE53625_series_matrix.txt.gz", AnnotGPL = FALSE, destdir = "cache",
                GSEMatrix = TRUE, getGPL = FALSE)

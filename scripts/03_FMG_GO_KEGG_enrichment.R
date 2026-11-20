@@ -1,12 +1,6 @@
 ###############################################################################
 ## Stage 3: FMG GO/KEGG Functional Enrichment
 ##
-## - 3A: clusterProfiler R package (>=4.0) [PMID: 34557778]
-## - 3B: P-value correction = Benjamini-Hochberg, adj.p < 0.05
-## - 3C: Background = org.Hs.eg.db default universe
-## SYMBOL -> ENTREZID conversion before enrichment
-## - 3D: Visualization = dotplot top 10 per ontology (BP/MF/CC + KEGG)
-##
 ## Input:
 ## tables/Tab1_2_FMG_list_primary.csv (18 Primary FMG)
 ##
@@ -17,21 +11,10 @@
 ## Tab3_FMG_KEGG.csv (full enrichKEGG result + significant flag)
 ##
 ## Outputs (figures/, PDF + PNG @ 1200 dpi):
-## Fig1B_FMG_GO_BP_dotplot.{pdf,png} (body Fig 1B, panel: GO BP)
-## Fig1B_FMG_GO_CC_dotplot.{pdf,png} (body Fig 1B, panel: GO CC)
-## Fig1B_FMG_GO_MF_dotplot.{pdf,png} (body Fig 1B, panel: GO MF supplementary)
-## Fig1C_FMG_KEGG_dotplot.{pdf,png} (body Fig 1C)
-##
-## Reference PMID:
-## - 34557778 : Wu T et al. 2021 Innovation -- clusterProfiler 4.0
-##
-## Random seed: 1262118388 (Liu et al. 2024)
-##
-## Notes:
-## - 18 FMG are a small enrichment input; if no term passes BH adj.p < 0.05 (e.g. KEGG),
-## the dot plot is skipped and this is reported.
-## - enrichKEGG calls the KEGG REST API on the first run (internet access required).
-## - The full (unfiltered) results are written to CSV; column `significant_BH_05` marks significance.
+## Fig1B_FMG_GO_BP_dotplot.{pdf,png}
+## Fig1B_FMG_GO_CC_dotplot.{pdf,png}
+## Fig1B_FMG_GO_MF_dotplot.{pdf,png}
+## Fig1C_FMG_KEGG_dotplot.{pdf,png}
 ###############################################################################
 
 # 0. Working directory + output directory

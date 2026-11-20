@@ -1,17 +1,10 @@
 ###############################################################################
 ## Stage 11c: Figure 8 panels for the external evaluation on the training scale (stage 11b)
 ##
-## Redraws the three panels of manuscript Figure 8 with the stage 11b score, using the code that drew them before:
-##   (a) Fig7A KM + risk table   : stage 11 code (scripts/11_external_validation_GSE53625.R), 8 x 7 in
-##   (b) Fig7B timeROC           : scripts/helpers/11_fix_Fig7B_legend.R, 7.2 x 6.6 in
-##   (c) Fig7C score/status/heat : scripts/helpers/11_fix_Fig7CDE_cosmetic.R, 11 x 5.46 in
-## The text that was later corrected in the assembled image by redrawing pixels is drawn here directly: en dashes in
-## the HR and AUC intervals, the AUC intervals as AUC +/- 1.96 SD, italic gene names and the
-## arrow in the heatmap axis title. Also redraws Fig7E (C-index, TCGA vs GSE53625; not used in the article) with
-## the stage 11b value, using the code of scripts/helpers/11_fix_Fig7E_cindex.R. Fig7D is not used anywhere and is left.
 ## Inputs  tables/Tab11b_GSE53625_RS_per_sample_training_scale.csv, tables/Tab11b_GSE53625_metrics_training_scale.csv,
 ##         tables/Tab10_LASSO_selected_genes.csv, tables/Tab11_GSE53625_concordance_index.csv (TCGA row of Fig7E),
-##         data/GSE53625_series_matrix.txt.gz, cache/GPL18109_pipe.rda (heatmap z-scores, as in stage 11)
+##         data/GSE53625_series_matrix.txt.gz, cache/GPL18109_pipe.rda (heatmap z-scores)
+##
 ## Outputs figures/Fig7A_*, Fig7B_*, Fig7C_*, Fig7E_* (.pdf/.png),
 ##         tables/Tab11b_GSE53625_concordance_index_training_scale.csv, logs/11c_external_figures.log
 ###############################################################################

@@ -1,13 +1,5 @@
 ###############################################################################
-## Fig 10C remake (v3) -- IPS metrics boxplot, Fig10A style
-##
-## Figure settings (2026-05-10):
-##   - jitter dots removed
-##   - raw P numerical labels removed
-##   - significance shown only by * stars
-##   - larger fonts
-##   - 92% data-range star positioning (Taselisib style)
-##   - black panel + strip borders
+## Fig 10C: IPS metrics boxplot
 ##
 ## Inputs:
 ##   data/expr_ESCA_tumor.csv               (gene x sample log2(RSEM+1))

@@ -1,24 +1,15 @@
 ###############################################################################
 ## Stage 14: Treatment Response Prediction
 ##
-## NOTE: 14A below ran on data/esca_tide_output_hgnc_self.txt, which is NOT a TIDE web output: it was made
-## on 2026-04-19 with TIDEpy 1.3.9 locally ("-c Other --ignore_norm") from an input logged twice (log2(x+1) of
-## values already log2(norm_count+1)). 14A was re-run with a singly logged, gene-centred input by
-## scripts/14a_tide_rerun.py and scripts/14a_tide_rerun.R, which now write the Tab14A_* tables and the Figure 11a
-## panel; this file is kept as it ran in May (14B IPS is unchanged).
-## NOTE: 14C below passes GDSC2_Res (natural-log IC50) to calcPhenotype() without exp(); the
-## oncoPredict vignette exponentiates it first. 14C was re-run that way (scripts/14b_oncopredict_predictions.R, run B)
-## and scripts/14c_oncopredict_vignette.R now writes the Tab14C_* tables and the Figure 11c panel.
-##
-## input:
-## - data/esca_tide_output_hgnc_self.txt (14A TIDE output, n=181; see NOTE above)
+## Inputs:
+## - data/esca_tide_output_hgnc_self.txt (14A TIDE output, n=181)
 ## - data/expr_ESCA_tumor.csv (14B/14C input)
 ## - data/GDSC2_Expr (RMA Normalized and Log Transformed).rds (14C training)
 ## - data/GDSC2_Res.rds (14C training IC50)
 ## - data/TCGA.ESCA.sampleMap_ESCA_clinicalMatrix.csv (for subtype stratification)
 ## - tables/Tab10_risk_scores_per_sample.csv (RiskGroup join key)
 ##
-## output:
+## Outputs:
 ## - tables/Tab14A_TIDE_metrics_test.csv
 ## - tables/Tab14A_responder_chisq.csv
 ## - tables/Tab14B_IPS_metrics_test.csv
@@ -30,25 +21,6 @@
 ## - figures/Fig10C_IPS_metrics_boxplot.{pdf,png}
 ## - figures/Fig10D_oncoPredict_top_drugs_boxplot.{pdf,png}
 ## - logs/14_treatment_response_diagnostics.txt
-##
-## cutoff:
-## - 14A: Wilcoxon Low-RS vs High-RS, raw p < 0.05 (per Liu 2024 §2.13); Responder chi-square (Fisher fallback if expected < 5)
-## - 14B: IOBR::IPS_calculation 5 metrics (IPS, MHC, EC, SC, CP); Wilcoxon + raw p < 0.05
-## - 14C: oncoPredict::calcPhenotype with GDSC2 training; Wilcoxon + raw p < 0.05; top 30 by raw p
-## - BH-adjusted p values are retained as supplementary columns in all output CSVs.
-##
-## PMID:
-## - 30127393: Jiang et al. 2018 Nat Med TIDE
-## - 28052254: Charoentong et al. 2017 Cell Rep IPS/TCIA framework
-## (the TCIA portal was not used; IPS from IOBR::IPS_calculation)
-## - 34276676: Zeng et al. 2021 Front Immunol IOBR R package
-## - 34260682: Maeser et al. 2021 Brief Bioinform oncoPredict
-##
-## Random seed: 1262118388
-##
-## Notes:
-## - 14C oncoPredict::calcPhenotype run time: ~5-10 min (GDSC2, 198 drugs x 181 samples).
-## memory use ~4 GB.
 ###############################################################################
 
 # run from the repository root (see README.md)
@@ -68,7 +40,7 @@ for (d in c(TBLDIR, FIGDIR, LOGDIR, CACHE)) {
   if (!dir.exists(d)) dir.create(d, recursive = TRUE, showWarnings = FALSE)
 }
 
-P_CUT <- 0.05  # raw p significance cutoff (Liu 2024 §2.13)
+P_CUT <- 0.05  # raw p significance cutoff
 TOP_N_DRUG <- 30 # Stage 14C top drugs by raw p
 
 RISK_COL <- c(Low = "#377EB8", High = "#E41A1C")
@@ -169,7 +141,7 @@ cat("\n========================================================================\
 cat(" Stage 14A: TIDE \n")
 cat("========================================================================\n")
 
-if (file.exists(INPUT_TIDE)) {   # the April TIDE output is not distributed; 14A was superseded by scripts/14a_tide_rerun.*
+if (file.exists(INPUT_TIDE)) {
 cat("[14A.1] Load TIDE output\n")
 tide_dt <- fread(INPUT_TIDE)
 # fread leaves the first (unnamed) column as 'V1'; read.delim renames it 'X'.

@@ -1,24 +1,11 @@
 ###############################################################################
 ## Stage 6: Tumor vs Normal Expression Difference (18 Primary FMG)
 ##
-## - 5A: Normal data source [PMID: 28398314]
-## GTEx 'Esophagus - Mucosa' only (n = 273, GTEx v7 subtype);
-## TCGA matched normal expression was not available in the dataset used.
-## - 5B: Wilcoxon rank-sum test, BH adj.p < 0.05
-## - 5C: log2FC = log2(median tumor / median normal)
-## the data are already log2(RSEM+1), so the difference of the log medians is used:
-## (median_tumor[log2] - median_normal[log2])
-## Visualization: violin plot per gene, Liu 2024 Figure 2C convention
-##
 ## Inputs:
 ## data/expr_ESCA_tumor.csv (TCGA tumor, 181 samples, log2(RSEM+1))
 ## data/expr_GTEx_esophagus.csv (GTEx esophagus all subtypes, 655 samples)
 ## data/GTEx_esophagus_subtype_map.csv (sample_expr -> subtype)
 ## tables/Tab1_2_FMG_list_primary.csv (18 Primary FMG)
-##
-## Sample filter:
-## Tumor : all 181 columns of expr_ESCA_tumor.csv (Primary Tumor only)
-## Normal : GTEx where subtype == "Esophagus - Mucosa" (n=273)
 ##
 ## Outputs (tables/):
 ## Tab6_expression_tumor_vs_normal.csv
@@ -28,21 +15,6 @@
 ##
 ## Outputs (figures/, PDF + PNG @ 600 dpi):
 ## Fig2C_TCGA_vs_GTEx_mucosa.{pdf,png}
-##
-## Reference PMID:
-## - 28398314 : Vivian et al. 2017 Nat Biotechnol -- UCSC Toil Recompute
-##
-## Random seed: 1262118388 (Liu et al. 2024)
-##
-## Notes:
-## - SENSITIVITY_TCGA_NORMAL flag: for a re-run with TCGA matched normal expression (FALSE here).
-## - Panel order: Stage 4 mutation prevalence, descending (as in Fig2A)
-## - color: Normal "#4DAF4A" (green), Tumor "#E41A1C" (red)
-## - Significance stars from the BH-adjusted p:
-## *** p<0.001
-## ** p<0.01
-## * p<0.05
-## ns p>=0.05
 ###############################################################################
 
 # 0. Working directory + output

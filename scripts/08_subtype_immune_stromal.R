@@ -1,22 +1,11 @@
 ###############################################################################
 ## Stage 8: Subtype Characterization (Immune & Stromal)
 ##
-## - 8A: ESTIMATE [PMID 24113773 -- Yoshihara 2013 Nat Commun]
-## - 8B: CIBERSORT (LM22, perm=1000, QN=TRUE) [PMID 25822800 -- Newman 2015 Nat Methods]
-## Inclusion criterion: CIBERSORT p < 0.05
-## - 8C: ssGSEA + Bindea 28-cell-type signature [PMID 19847166 -- Barbie 2009 Nature
-## PMID 24138885 -- Bindea 2013 Immunity]
-## GSVA >=v1.50 ssgseaParam() API
-## - 8D: Immune checkpoint genes (Liu 2024, n=30 after SLAMF4=CD244 alias)
-## Wilcoxon rank-sum, BH FDR < 0.05
-## - 8E: HLA family genes (Liu 2024, n=19)
-## Wilcoxon rank-sum, BH FDR < 0.05
-##
 ## Inputs:
 ## data/expr_ESCA_tumor.csv (TCGA log2(RSEM+1), 58581 x 181)
 ## tables/Tab7_cluster_assignment.csv (sampleID, cluster {C1,C2}, histology, OS)
 ## data/LM22.txt (CIBERSORT 22 cell type signature matrix)
-## data/CIBERSORT.R (Newman 2015 v1.02 local script)
+## data/CIBERSORT.R (CIBERSORT R script v1.02)
 ## data/Bindea_28_signatures.tsv (28 cell types x 578 unique genes)
 ##
 ## Outputs:
@@ -36,19 +25,6 @@
 ## Fig4C_ssGSEA_Bindea_clusters.{pdf,png} (heatmap 28 x 181)
 ## Fig4D_immune_checkpoint_clusters.{pdf,png} (heatmap 30 x 181)
 ## Fig4E_HLA_clusters.{pdf,png} (heatmap 19 x 181)
-##
-## Random seed: 1262118388 (Liu et al. 2024)
-##
-## Notes:
-## - Cluster colors (as in stage 7): C1 = "#1B9E77" (Dark2 teal), C2 = "#D95F02" (Dark2 orange)
-## - Histology colors: ESCC = "#1B9E77", EAC = "#D95F02", Other = "#7570B3"
-## - Heatmap z-score: row-wise (per cell type/gene)
-## - Heatmap palette: RdBu reversed (low blue, high red), midpoint 0
-##
-## SLAMF4 -> CD244 alias mapped (NCBI Gene ID 51744). n_checkpoint = 30
-##
-## Bindea 28 source: hybrid (IOBR v2.2.0 27 + NK CD56bright direct from
-## Bindea 2013 supp Table S1 [PMID 24138885]).
 ###############################################################################
 
 # 0. + directory
@@ -72,7 +48,7 @@ for (d in c(TBLDIR, FIGDIR, LOGDIR, CACHE)) {
 ADJ_P <- 0.05 # Stage 8 BH FDR cutoff (8B/8C/8D/8E)
 SEED <- 1262118388
 
-# Cluster + histology palettes (as in stage 7)
+# Cluster + histology palettes
 CLUSTER_COL <- c(C1 = "#1B9E77", C2 = "#D95F02") # Dark2; same colours as stages 7 and 9
 HIST_COL <- c(ESCC = "#1B9E77", EAC = "#D95F02", Other = "#7570B3")
 
@@ -531,7 +507,7 @@ save_fig(ht_c, "Fig4C_ssGSEA_Bindea_clusters", w = 14, h = 8, is_heatmap = TRUE)
 # 7. STEP D: Immune checkpoint (8D)
 cat("\n>>> STEP D: Immune checkpoint genes (n=30 after alias)\n")
 
-# Liu 2024 checkpoint list (alias mapped per NCBI Gene; SLAMF4 = CD244)
+# Checkpoint list (alias mapped per NCBI Gene; SLAMF4 = CD244)
 checkpoint_alias <- c(
   "PD-L1" = "CD274",
   "SLAMF4" = "CD244",
@@ -564,8 +540,6 @@ checkpoint_alias <- c(
   "TL1A" = "TNFSF15",
   "4-1BB-L" = "TNFSF9"
 )
-# Note: 4-1BB and 4-1BB-L both -> TNFRSF9 / TNFSF9. Liu 2024 may treat as separate
-# (receptor + ligand). But TNFSF9 = 4-1BB-L, TNFRSF9 = 4-1BB. Already correct.
 
 stopifnot(length(checkpoint_alias) == 30)
 cp_present <- checkpoint_alias %in% rownames(expr_mat)
@@ -578,7 +552,7 @@ if (length(miss) > 0) {
 
 cp_genes <- checkpoint_alias[cp_present]
 cp_mat <- expr_mat[as.character(cp_genes), ]
-rownames(cp_mat) <- names(cp_genes) # use Liu 2024 display names
+rownames(cp_mat) <- names(cp_genes) # use display names
 
 # Wilcoxon C1 vs C2 per gene
 d_stats <- rbindlist(lapply(rownames(cp_mat), function(g) {

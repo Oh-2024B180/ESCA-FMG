@@ -1,15 +1,8 @@
 ###############################################################################
-## Stage 14C after the oncoPredict check (2026-10-19)
+## Stage 14C: risk-group tests of the oncoPredict predictions of run B (scripts/14b_oncopredict_predictions.R)
 ##
-## The GDSC2 training response (GDSC2_Res.rds) holds natural-log IC50 values. The oncoPredict vignette
-## (vignettes/calcPhenotype.Rmd) exponentiates them before calcPhenotype(), which then power-transforms the response,
-## "to not have both transformations"; stage 14C had passed the log values directly. The predictions used here are
-## run B of scripts/14b_oncopredict_predictions.R (oncoPredict 1.2, R 4.4.1, 63 min; trainingPtype = exp(GDSC2_Res),
-## everything else as in stage 14C: batchCorrect "eb", powerTransformPhenotype TRUE, removeLowVaryingGenes 0.4,
-## minNumSamples 10, removeLowVaringGenesFrom "rawData"), saved as tables/Tab14Cb_oncoPredict_IC50_vignette.csv
-## (calcPhenotype returns them on the IC50 scale). Run A of the same script reproduced the stage 14C table exactly.
-## This script puts the predictions on the natural-log scale used before, repeats the stage 14C tests unchanged and
-## redraws Figure 11c with the Fig10D block of figures/remake/v3_fig8_10_remake.R (unchanged).
+## Inputs  tables/Tab14Cb_oncoPredict_IC50_vignette.csv, tables/Tab10_risk_scores_per_sample.csv
+##
 ## Outputs tables/Tab14C_oncoPredict_IC50_full.csv, tables/Tab14C_oncoPredict_drug_test.csv,
 ##         tables/Tab14C_oncoPredict_top30_drugs.csv, figures/remake/Fig10D_oncoPredict_top10_boxplot_v3.{pdf,png},
 ##         logs/14c_oncopredict_vignette.log
@@ -27,7 +20,7 @@ pred <- fread("tables/Tab14Cb_oncoPredict_IC50_vignette.csv")
 drug_cols <- setdiff(colnames(pred), "sampleID")
 stopifnot(nrow(pred) == 181, all(pred$sampleID %in% rs_dt$sampleID), all(as.matrix(pred[, ..drug_cols]) > 0, na.rm = TRUE))
 ic50_dt <- copy(pred)
-ic50_dt[, (drug_cols) := lapply(.SD, log), .SDcols = drug_cols]                 # natural log, as in the published table
+ic50_dt[, (drug_cols) := lapply(.SD, log), .SDcols = drug_cols]                 # natural log
 cat(sprintf("predictions: %d samples x %d drugs, missing values %d\n", nrow(ic50_dt), length(drug_cols),
             sum(is.na(as.matrix(ic50_dt[, ..drug_cols])))))
 fwrite(ic50_dt, file.path(TBLDIR, "Tab14C_oncoPredict_IC50_full.csv"))

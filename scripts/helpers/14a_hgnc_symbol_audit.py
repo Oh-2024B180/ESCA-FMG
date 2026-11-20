@@ -1,14 +1,9 @@
 ###############################################################################
 ## Stage 14A helper: HGNC symbol audit of the expression genes (the "keep" list used by scripts/14a_tide_rerun.py)
 ##
-## The April 2026 TIDE input was built from the genes of data/expr_ESCA_tumor.csv whose symbol is a current HGNC
-## approved symbol of a protein-coding gene (directly, or as the unique target of an alias or previous symbol).
-## This script repeats that audit; it combines the two April 2026 scripts of the analysis folder (gene list
-## extraction, then the HGNC audit) with the same rules, run from the repository root.
-##
 ## Inputs  data/expr_ESCA_tumor.csv (first column = gene symbol)
-##         data/hgnc_complete_set.txt (HGNC complete set; the April run used the file downloaded on 2026-04-19 —
-##         a later HGNC release can classify a few symbols differently)
+##         data/hgnc_complete_set.txt (HGNC complete set)
+##
 ## Outputs data/tide_2026-04/gene_list_from_expr.csv, gene_list_summary.txt,
 ##         data/tide_2026-04/gene_symbol_audit.csv (read by 14a_tide_rerun.py), gene_symbol_keep_list.csv,
 ##         gene_symbol_drop_list.csv, gene_symbol_audit_summary.txt

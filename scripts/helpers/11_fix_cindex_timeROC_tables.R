@@ -1,16 +1,8 @@
 ###############################################################################
-## Helper (2026-10-06): corrected discrimination tables for Stage 10 and Stage 11
-##
-## Two slips in 10_LASSO_Cox_model.R and 11_external_validation_GSE53625.R were corrected on 2026-10-06:
-##   1. the 95% CI of the time-dependent AUC used sqrt(inference$vect_sd_1); vect_sd_1 already is the
-##      standard error, so the intervals were far too wide (e.g. 0.337-1.000 for an AUC of 0.755);
-##   2. the external C-index was read from summary(coxph(Surv ~ risk_score)) fitted INSIDE GSE53625.
-##      A refitted model re-estimates the sign of the score, so an inverted association still gives a
-##      value above 0.5 (0.517). The fixed score, higher = shorter survival, has C = 0.483.
-## This helper rebuilds the three small tables from the stored per-sample risk scores, so the stage
-## scripts (which also redraw figures) do not have to be run again. Nothing else is written.
+## Helper: corrected discrimination tables for Stage 10 and Stage 11
 ##
 ## Inputs : tables/Tab10_risk_scores_per_sample.csv, tables/Tab11_GSE53625_RS_per_sample.csv
+##
 ## Outputs: tables/Tab10_timeROC_AUC.csv, tables/Tab11_GSE53625_timeROC_AUC.csv,
 ##          tables/Tab11_GSE53625_concordance_index.csv
 ###############################################################################

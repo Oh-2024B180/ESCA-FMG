@@ -1,19 +1,6 @@
 ###############################################################################
 ##  Stage 13 helper — Fig9A nomogram + Fig9B calibration cosmetic patch
 ##
-##  Purpose:
-##    Re-render Fig9A/9B with cosmetic improvements only:
-##      - Fig9A: variable labels via Hmisc::label() — "histology_collapsed",
-##               "stage_collapsed", "residual_collapsed" → friendly names
-##      - Fig9B: calibration plot bottom-margin enlargement so rms default
-##               annotation ("n=145 d=58 p=6 50 subjects per group, ...")
-##               does not overlap with x-axis label
-##
-##  Statistics:
-##    nomogram + calibration must be re-fitted (rms model objects not pickled),
-##    but seed=1262118388 is fixed → identical bootstrap result. Tab13_*.csv
-##    NOT TOUCHED (helper does not write any csv).
-##
 ##  Input (read-only):
 ##    tables/Tab10_risk_scores_per_sample.csv
 ##    data/TCGA.ESCA.sampleMap_ESCA_clinicalMatrix.csv
@@ -22,11 +9,6 @@
 ##    figures/Fig9A_nomogram.{pdf,png}
 ##    figures/Fig9B_calibration.{pdf,png}
 ##    figures/Fig9C_C_index_comparison.{pdf,png}
-##
-##  NOT TOUCHED:
-##    Tab13_*.csv (4 files)
-##    Stage 13 main script 13_nomogram_construction.R
-##
 
 # run from the repository root (see README.md)
 
@@ -134,7 +116,7 @@ ragg::agg_png(file.path(FIGDIR, "Fig9A_nomogram.png"), width = W, height = H,
 draw_nom(); dev.off()
 cat("    [OK] Fig9A_nomogram.{pdf,png}\n")
 
-# ── 4. Fig9B calibration with bottom-margin fix ─────────────────────────────
+# ── 4. Fig9B calibration ─────────────────────────────
 cat("[4] Render Fig9B calibration (1-yr + 3-yr with B=1000 bootstrap)\n")
 at_risk_5yr <- sum(ph_nom_df$OS.time >= 1825)
 cat(sprintf("    at-risk @ 1-yr: %d, 2-yr: %d, 3-yr: %d, 5-yr: %d\n",
@@ -149,9 +131,6 @@ if (at_risk_5yr < AT_RISK_MIN) {
   labels_calib <- c("1-year","2-year","3-year","5-year")
 }
 
-# Cosmetic margin: bottom 7 lines (rms calibrate plot writes default sub at
-# bottom — needs ample room so that x-axis label "Nomogram predicted survival"
-# is not overlapped by the "n=… d=… p=… ..." annotation).
 draw_calib <- function() {
   par(mfrow = c(1, length(times_calib)),
       mar  = c(5, 4.5, 4, 1.2),
@@ -186,7 +165,7 @@ ragg::agg_png(file.path(FIGDIR, "Fig9B_calibration.png"), width = W2, height = H
 draw_calib(); dev.off()
 cat("    [OK] Fig9B_calibration.{pdf,png}\n")
 
-# ── 5. Fig9C C-index bar (label/error-bar overlap fix) ─────────────────────
+# ── 5. Fig9C C-index bar ─────────────────────
 cat("[5] Render Fig9C C-index comparison (anchor labels at c_high_95)\n")
 INPUT_CIDX <- "tables/Tab13_C_index_comparison.csv"
 cidx_dt <- fread(INPUT_CIDX)

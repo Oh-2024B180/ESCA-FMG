@@ -1,11 +1,5 @@
 ###############################################################################
-## Data-driven Discussion material:
-##  A. Is the risk score itself aligned with cluster (C1/C2) and histology (ESCC/EAC)?
-##  B. Which of the 7 signature genes drive that alignment (per-gene C1-vs-C2 and
-##     ESCC-vs-EAC direction), and does each gene's contribution to RS push toward
-##     one histology?
-##  C. How well does the RS discriminate histology (AUC)?  (contrast with survival)
-##  D. CODA vs TCGA 18-FMG prevalence correlation (population divergence).
+## Risk score and the seven signature genes by cluster and histology; CODA vs TCGA FMG prevalence
 ###############################################################################
 # run from the repository root (see README.md)
 suppressPackageStartupMessages({library(data.table)})
