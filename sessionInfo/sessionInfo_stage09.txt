@@ -1,0 +1,65 @@
+Session info captured: 2026-05-06 22:32:54.598363
+
+R version 4.4.3 (2025-02-28 ucrt)
+Platform: x86_64-w64-mingw32/x64
+Running under: Windows 11 x64 (build 26200)
+
+Matrix products: default
+
+
+locale:
+[1] LC_COLLATE=Korean_Korea.utf8  LC_CTYPE=Korean_Korea.utf8   
+[3] LC_MONETARY=Korean_Korea.utf8 LC_NUMERIC=C                 
+[5] LC_TIME=Korean_Korea.utf8    
+
+time zone: Asia/Seoul
+tzcode source: internal
+
+attached base packages:
+[1] grid      stats4    stats     graphics  grDevices utils     datasets 
+[8] methods   base     
+
+other attached packages:
+ [1] ragg_1.5.2             ggplot2_4.0.2          circlize_0.4.18       
+ [4] ComplexHeatmap_2.22.0  enrichplot_1.26.6      org.Hs.eg.db_3.20.0   
+ [7] AnnotationDbi_1.68.0   IRanges_2.40.1         S4Vectors_0.44.0      
+[10] Biobase_2.66.0         BiocGenerics_0.52.0    clusterProfiler_4.14.6
+[13] biomaRt_2.62.1         limma_3.62.2           data.table_1.18.2.1   
+
+loaded via a namespace (and not attached):
+  [1] DBI_1.3.0               gson_0.1.0              httr2_1.2.2            
+  [4] rlang_1.2.0             magrittr_2.0.3          clue_0.3-68            
+  [7] GetoptLong_1.1.1        DOSE_4.0.1              otel_0.2.0             
+ [10] matrixStats_1.5.0       compiler_4.4.3          RSQLite_2.4.6          
+ [13] systemfonts_1.3.2       png_0.1-9               vctrs_0.7.3            
+ [16] reshape2_1.4.5          stringr_1.6.0           shape_1.4.6.1          
+ [19] pkgconfig_2.0.3         crayon_1.5.3            fastmap_1.2.0          
+ [22] magick_2.9.1            dbplyr_2.5.2            XVector_0.46.0         
+ [25] labeling_0.4.3          UCSC.utils_1.2.0        purrr_1.2.2            
+ [28] bit_4.6.0               zlibbioc_1.52.0         cachem_1.1.0           
+ [31] aplot_0.2.9             GenomeInfoDb_1.42.3     jsonlite_2.0.0         
+ [34] progress_1.2.3          blob_1.3.0              BiocParallel_1.40.0    
+ [37] cluster_2.1.8.2         parallel_4.4.3          prettyunits_1.2.0      
+ [40] R6_2.6.1                stringi_1.8.7           RColorBrewer_1.1-3     
+ [43] GOSemSim_2.32.0         iterators_1.0.14        Rcpp_1.1.1             
+ [46] ggtangle_0.1.1          R.utils_2.13.0          Matrix_1.7-5           
+ [49] splines_4.4.3           igraph_2.2.3            tidyselect_1.2.1       
+ [52] qvalue_2.38.0           doParallel_1.0.17       codetools_0.2-20       
+ [55] curl_7.0.0              lattice_0.22-9          tibble_3.3.1           
+ [58] plyr_1.8.9              withr_3.0.2             treeio_1.30.0          
+ [61] KEGGREST_1.46.0         S7_0.2.1                gridGraphics_0.5-1     
+ [64] BiocFileCache_2.14.0    xml2_1.5.2              Biostrings_2.74.1      
+ [67] pillar_1.11.1           ggtree_3.14.0           filelock_1.0.3         
+ [70] foreach_1.5.2           ggfun_0.2.0             generics_0.1.4         
+ [73] hms_1.1.4               scales_1.4.0            tidytree_0.4.7         
+ [76] glue_1.8.0              lazyeval_0.2.3          tools_4.4.3            
+ [79] fgsea_1.32.4            fs_2.0.1                fastmatch_1.1-8        
+ [82] cowplot_1.2.0           tidyr_1.3.2             ape_5.8-1              
+ [85] colorspace_2.1-2        nlme_3.1-169            GenomeInfoDbData_1.2.13
+ [88] patchwork_1.3.2         cli_3.6.6               rappdirs_0.3.4         
+ [91] textshaping_1.0.5       dplyr_1.2.1             gtable_0.3.6           
+ [94] R.methodsS3_1.8.2       yulab.utils_0.2.4       digest_0.6.39          
+ [97] ggrepel_0.9.8           ggplotify_0.1.3         rjson_0.2.23           
+[100] farver_2.1.2            memoise_2.0.1           R.oo_1.27.1            
+[103] lifecycle_1.0.5         httr_1.4.8              GlobalOptions_0.1.4    
+[106] GO.db_3.20.0            statmod_1.5.1           bit64_4.6.0-1          

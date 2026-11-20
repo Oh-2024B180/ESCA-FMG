@@ -1,0 +1,8 @@
+data/
+tables/
+/figures/
+logs/
+cache/
+.Rhistory
+.RData
+__pycache__/
