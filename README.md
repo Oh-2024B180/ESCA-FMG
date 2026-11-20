@@ -116,14 +116,7 @@ article, and `14b` compares its first run with the stage 14 predictions, so it r
 last: `rerun_ccp_fig4.R`, `rerun_lasso_fig7.R` and `v3_fig10C_IPS.R` before the `redraw_*` scripts, which read their
 results.
 
-The pipeline was developed in two project folders; for this release the output folders were unified and
-machine-specific paths were removed. The scripts were checked to parse after that edit but were not re-run end to end
-in this layout. Development notes of the original project (references to internal planning notes, revision
-bookkeeping, notes that were not in English) were removed from the comments and from a few printed progress messages,
-and a few outdated comments were corrected; the computations were checked to be unchanged (R parse tokens and Python
-syntax trees compared with comments and message texts set aside). Dates that record when a script was written or
-corrected were kept. Some headers still cite sections of CLAUDE.md, a notes file of the development project that is
-not part of this repository.
+The scripts have not been re-run end to end in this repository layout.
 
 ## Software
 
