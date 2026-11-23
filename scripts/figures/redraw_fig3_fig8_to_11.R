@@ -184,7 +184,10 @@ if ("9" %in% args) {
   cmap <- setNames(CP$gene_symbol, CP$gene_display)
   feat_vals <- function(f, cat) {
     if (cat == "ESTIMATE") return(data.table(sampleID = est$sampleID, value = est[[f]]))
-    if (cat == "CIBERSORT") return(data.table(sampleID = cib$sampleID, value = cib[[f]]))
+    if (cat == "CIBERSORT") {                    # confident deconvolutions only (p < 0.05)
+      cc <- cib[`P-value` < 0.05]
+      return(data.table(sampleID = cc$sampleID, value = cc[[f]]))
+    }
     if (cat == "ssGSEA_Bindea") { m <- which(ssg$cell_type == sub(" \\(Bindea\\)$", "", f)); sc <- setdiff(colnames(ssg), "cell_type")
       return(data.table(sampleID = sc, value = as.numeric(ssg[m, ..sc]))) }
     sym <- if (cat == "Immune_checkpoint") cmap[[f]] else f

@@ -274,7 +274,11 @@ cib_cell_cols <- setdiff(colnames(cib), cib_meta_cols)
 stopifnot(length(cib_cell_cols) == 22)
 cib_mat <- as.matrix(cib[, ..cib_cell_cols])
 rownames(cib_mat) <- cib$sampleID
-cat(sprintf(" CIBERSORT features : %d\n", length(cib_cell_cols)))
+# only confident deconvolutions (permutation p < 0.05; Methods 2.6) enter the risk-score analyses, as in the
+# cluster comparison: the fractions of the other samples (one borderline, p = 0.06) are set missing
+cib_mat[cib$`P-value` >= 0.05, ] <- NA
+cat(sprintf(" CIBERSORT features : %d (confident samples: %d of %d)\n", length(cib_cell_cols),
+            sum(cib$`P-value` < 0.05), nrow(cib)))
 
 # 4.3 ssGSEA Bindea 28 cell types transpose
 ssg_keep <- ssg[, c("cell_type", samples_keep), with = FALSE]
@@ -499,8 +503,8 @@ wilcox_rows <- lapply(colnames(feat_mat), function(f) {
   data.table(
     feature_category = unname(feat_category[f]),
     feature = f,
-    n_low = length(v_low),
-    n_high = length(v_high),
+    n_low = sum(!is.na(v_low)),
+    n_high = sum(!is.na(v_high)),
     median_low = med_low,
     median_high = med_high,
     log2FC_or_diff = fc,
